@@ -3,11 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "build:css": "tailwindcss -i ./src/styles.css -o ./dist/output.css"
+    "lint": "next lint"
   },
   "dependencies": {
     "lucide-react": "^0.539.0",
