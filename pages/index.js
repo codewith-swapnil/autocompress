@@ -46,7 +46,7 @@ const FixKaro = () => {
 
   const locations = [
     "सेक्टर 62, नोएडा",
-    "ग्रेटर कैलाश, दिल्ली", 
+    "ग्रेटर कैलाश, दिल्ली",
     "बांद्रा पश्चिम, मुंबई",
     "जयनगर, बैंगलोर",
     "साल्ट लेक सिटी, कोलकाता"
@@ -73,7 +73,7 @@ const FixKaro = () => {
       ]
     },
     "Painting": {
-      title: "पेंटिंग सेवाएं", 
+      title: "पेंटिंग सेवाएं",
       description: "हमारे अनुभवी पेंटर्स घर, कार्यालय और वाणिज्यिक स्थानों के लिए उच्च गुणवत्ता वाली पेंटिंग सेवाएं प्रदान करते हैं।",
       icon: "🎨",
       providers: [
@@ -117,7 +117,7 @@ const FixKaro = () => {
     // This runs only on client side
     const providers = Object.entries(services)
       .filter(([_, service]) => service.providers.length > 0)
-      .flatMap(([serviceKey, service]) => 
+      .flatMap(([serviceKey, service]) =>
         service.providers.map(provider => ({
           ...provider,
           serviceKey,
@@ -126,7 +126,7 @@ const FixKaro = () => {
           responseRate: Math.floor(Math.random() * 5) + 95
         }))
       );
-    
+
     // Simulate network delay
     setTimeout(() => {
       setProvidersWithDistance(providers);
@@ -153,7 +153,7 @@ const FixKaro = () => {
     <div className="sticky top-0 z-50 bg-gradient-to-r from-teal-600 to-teal-500 px-4 py-3 flex items-center text-white">
       <MapPin className="text-white mr-2 h-5 w-5" />
       <div className="flex-grow font-medium">{currentLocation}</div>
-      <button 
+      <button
         onClick={refreshLocation}
         className="px-3 py-1.5 text-sm bg-white/20 border border-white/30 rounded-full flex items-center gap-2 hover:bg-white/30 backdrop-blur-sm"
       >
@@ -174,7 +174,7 @@ const FixKaro = () => {
         </span>
       </div>
       <div className="flex items-center gap-3">
-        <button 
+        <button
           onClick={() => setCurrentPage('notifications')}
           className="w-10 h-10 rounded-full bg-gray-100 border border-gray-300 flex items-center justify-center hover:bg-gray-200 relative"
         >
@@ -190,13 +190,13 @@ const FixKaro = () => {
   const Hero = () => (
     <section className="px-4 py-8 text-center bg-gradient-to-b from-white to-teal-50">
       <h1 className="text-4xl font-bold mb-4 leading-tight text-gray-900">
-        <span className="block bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">विश्वसनीय</span> 
+        <span className="block bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">विश्वसनीय</span>
         Home Services
       </h1>
       <p className="text-lg text-gray-600 mb-6 max-w-md mx-auto font-light">
         अपनी सभी रखरखाव जरूरतों के लिए सत्यापित पेशेवरों से जुड़ें
       </p>
-      
+
       <div className="flex justify-center flex-wrap gap-3 mb-8">
         <div className="bg-white px-4 py-2 rounded-full shadow-md border border-gray-200 text-emerald-600 font-medium text-sm flex items-center gap-2">
           <CheckCircle className="h-4 w-4" />
@@ -211,11 +211,11 @@ const FixKaro = () => {
           <span>सुरक्षित Booking</span>
         </div>
       </div>
-      
+
       <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden max-w-md mx-auto flex">
-        <input 
-          type="text" 
-          placeholder="Search for services..." 
+        <input
+          type="text"
+          placeholder="Search for services..."
           className="flex-1 px-5 py-4 bg-gray-50 text-base outline-none"
         />
         <button className="px-5 bg-gradient-to-r from-teal-500 to-emerald-500 text-white font-semibold hover:from-teal-600 hover:to-emerald-600 transition-colors">
@@ -237,7 +237,7 @@ const FixKaro = () => {
       </div>
       <div className="grid grid-cols-3 gap-4">
         {Object.entries(services).map(([key, service]) => (
-          <div 
+          <div
             key={key}
             onClick={() => showService(key)}
             className="bg-white border border-gray-200 rounded-2xl p-5 text-center cursor-pointer hover:shadow-lg hover:border-teal-300 hover:-translate-y-1 transition-all"
@@ -266,7 +266,7 @@ const FixKaro = () => {
         <div className="h-6 bg-gray-200 rounded w-3/4 mb-4 animate-pulse"></div>
         <div className="h-4 bg-gray-200 rounded w-1/2 mb-3 animate-pulse"></div>
         <div className="h-4 bg-gray-200 rounded w-2/3 mb-4 animate-pulse"></div>
-        
+
         <div className="flex justify-between pt-4 border-t border-gray-100 mb-4">
           <div className="text-center">
             <div className="h-6 bg-gray-200 rounded w-8 mx-auto mb-1 animate-pulse"></div>
@@ -281,7 +281,7 @@ const FixKaro = () => {
             <div className="h-3 bg-gray-200 rounded w-16 mx-auto animate-pulse"></div>
           </div>
         </div>
-        
+
         <div className="flex gap-2">
           <div className="flex-1 h-10 bg-gray-200 rounded-full animate-pulse"></div>
           <div className="flex-1 h-10 bg-gray-200 rounded-full animate-pulse"></div>
@@ -300,7 +300,7 @@ const FixKaro = () => {
           View All <ArrowRight className="h-4 w-4" />
         </button>
       </div>
-      
+
       <div className="space-y-4">
         {loadingProviders ? (
           <>
@@ -372,7 +372,7 @@ const FixKaro = () => {
     return (
       <div className="min-h-screen bg-gray-50">
         <div className="bg-white px-4 py-4 flex items-center gap-4 border-b border-gray-200">
-          <button 
+          <button
             onClick={() => setCurrentPage('home')}
             className="w-9 h-9 rounded-full bg-gray-100 border border-gray-300 flex items-center justify-center hover:bg-gray-200"
           >
@@ -380,7 +380,7 @@ const FixKaro = () => {
           </button>
           <h3 className="font-semibold text-gray-900">{services[currentService]?.title}</h3>
         </div>
-        
+
         <div className="p-5">
           <div className="text-center mb-8">
             <div className="w-20 h-20 bg-gradient-to-r from-teal-50 to-emerald-50 rounded-3xl flex items-center justify-center mx-auto mb-5 text-4xl">
@@ -389,7 +389,7 @@ const FixKaro = () => {
             <h2 className="text-2xl font-bold text-gray-900 mb-3">{services[currentService]?.title}</h2>
             <p className="text-gray-600 max-w-lg mx-auto">{services[currentService]?.description}</p>
           </div>
-          
+
           <div>
             <h3 className="text-lg font-semibold mb-4">उपलब्ध पेशेवर</h3>
             {loading ? (
@@ -459,7 +459,7 @@ const FixKaro = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white px-4 py-4 flex items-center justify-between border-b border-gray-200">
         <div className="flex items-center gap-4">
-          <button 
+          <button
             onClick={() => setCurrentPage('home')}
             className="w-9 h-9 rounded-full bg-gray-100 border border-gray-300 flex items-center justify-center hover:bg-gray-200"
           >
@@ -468,7 +468,7 @@ const FixKaro = () => {
           <h3 className="font-semibold text-gray-900">सूचनाएं</h3>
         </div>
         {notifications.length > 0 && (
-          <button 
+          <button
             onClick={clearNotifications}
             className="w-10 h-10 rounded-full bg-gray-100 border border-gray-300 flex items-center justify-center hover:bg-gray-200"
           >
@@ -476,7 +476,7 @@ const FixKaro = () => {
           </button>
         )}
       </div>
-      
+
       <div className="p-3">
         {notifications.length === 0 ? (
           <div className="text-center py-16">
@@ -487,9 +487,8 @@ const FixKaro = () => {
         ) : (
           <div className="space-y-3">
             {notifications.map((notification) => (
-              <div key={notification.id} className={`bg-white rounded-xl p-4 border-l-4 shadow-sm ${
-                notification.unread ? 'border-teal-500 bg-teal-50' : 'border-gray-300'
-              }`}>
+              <div key={notification.id} className={`bg-white rounded-xl p-4 border-l-4 shadow-sm ${notification.unread ? 'border-teal-500 bg-teal-50' : 'border-gray-300'
+                }`}>
                 <div className="flex items-start gap-3">
                   <notification.icon className="h-5 w-5 text-teal-600 mt-0.5" />
                   <div className="flex-1">
@@ -515,20 +514,18 @@ const FixKaro = () => {
         { id: 'account', icon: User, label: 'खाता' },
         { id: 'more', icon: MoreHorizontal, label: 'अधिक' }
       ].map((item) => (
-        <button 
+        <button
           key={item.id}
           onClick={() => setCurrentPage(item.id === 'home' ? 'home' : item.id)}
-          className={`flex flex-col items-center py-2 px-3 rounded-lg text-xs font-medium transition-colors ${
-            currentPage === (item.id === 'home' ? 'home' : item.id) 
-              ? 'text-teal-600' 
-              : 'text-gray-500'
-          }`}
+          className={`flex flex-col items-center py-2 px-3 rounded-lg text-xs font-medium transition-colors ${currentPage === (item.id === 'home' ? 'home' : item.id)
+            ? 'text-teal-600'
+            : 'text-gray-500'
+            }`}
         >
-          <item.icon className={`h-6 w-6 mb-1 ${
-            currentPage === (item.id === 'home' ? 'home' : item.id) 
-              ? 'stroke-2' 
-              : ''
-          }`} />
+          <item.icon className={`h-6 w-6 mb-1 ${currentPage === (item.id === 'home' ? 'home' : item.id)
+            ? 'stroke-2'
+            : ''
+            }`} />
           {item.label}
         </button>
       ))}
@@ -547,13 +544,13 @@ const FixKaro = () => {
         <p className="text-sm text-gray-600">बेहतर अनुभव के लिए इंस्टॉल करें</p>
       </div>
       <div className="flex gap-2">
-        <button 
+        <button
           onClick={() => setShowInstallBanner(false)}
           className="px-3 py-2 text-sm font-semibold bg-gray-100 text-gray-900 rounded-full border border-gray-300 hover:bg-gray-200"
         >
           बाद में
         </button>
-        <button 
+        <button
           onClick={() => {
             alert("App installation would be triggered here in a real PWA");
             setShowInstallBanner(false);
@@ -583,30 +580,8 @@ const FixKaro = () => {
       <Head>
         <title>FixKaro - Home Services App</title>
         <link rel="icon" href="/favicon.ico" />
-        {/* Tailwind CSS CDN */}
-        <script src="https://cdn.tailwindcss.com"></script>
-        <script>
-          {`
-            tailwind.config = {
-              theme: {
-                extend: {
-                  colors: {
-                    teal: {
-                      500: '#0d9488',
-                      600: '#0f766e',
-                    },
-                    emerald: {
-                      500: '#10b981',
-                      600: '#059669',
-                    }
-                  }
-                },
-              }
-            }
-          `}
-        </script>
       </Head>
-      
+
       <div className="max-w-lg mx-auto bg-white min-h-screen relative overflow-hidden shadow-2xl">
         {currentPage === 'home' && <HomePage />}
         {currentPage === 'service' && <ServiceDetailPage />}
@@ -616,7 +591,7 @@ const FixKaro = () => {
             <div className="text-center">
               <h2 className="text-2xl font-bold text-gray-900 mb-2">{currentPage} Page</h2>
               <p className="text-gray-600">This page is under construction</p>
-              <button 
+              <button
                 onClick={() => setCurrentPage('home')}
                 className="mt-4 px-6 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-full font-semibold hover:from-teal-600 hover:to-emerald-600"
               >
@@ -625,7 +600,7 @@ const FixKaro = () => {
             </div>
           </div>
         )}
-        
+
         <Navigation />
         <InstallBanner />
       </div>
