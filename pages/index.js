@@ -150,7 +150,7 @@ const FixKaro = () => {
   };
 
   const LocationBar = () => (
-    <div className="sticky top-0 z-50 bg-gradient-to-r from-teal-600 to-teal-500 px-4 py-3 flex items-center text-white">
+    <div className="sticky top-0 z-50 bg-gradient-to-r from-teal-700 to-teal-600 px-4 py-3 flex items-center text-white">
       <MapPin className="text-white mr-2 h-5 w-5" />
       <div className="flex-grow font-medium">{currentLocation}</div>
       <button
@@ -166,10 +166,10 @@ const FixKaro = () => {
   const Header = () => (
     <header className="sticky top-12 z-40 bg-white px-4 py-4 flex items-center justify-between border-b border-gray-200 shadow-sm">
       <div className="flex items-center gap-3">
-        <div className="w-9 h-9 bg-gradient-to-r from-teal-500 to-emerald-500 rounded-lg flex items-center justify-center shadow-md">
+        <div className="w-9 h-9 bg-gradient-to-r from-teal-600 to-emerald-600 rounded-lg flex items-center justify-center shadow-md">
           <Wrench className="text-white h-5 w-5" />
         </div>
-        <span className="text-xl font-bold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">
+        <span className="text-xl font-bold bg-gradient-to-r from-teal-700 to-emerald-700 bg-clip-text text-transparent">
           Fix<span className="font-extrabold">Karo</span>
         </span>
       </div>
@@ -190,7 +190,7 @@ const FixKaro = () => {
   const Hero = () => (
     <section className="px-4 py-8 text-center bg-gradient-to-b from-white to-teal-50">
       <h1 className="text-4xl font-bold mb-4 leading-tight text-gray-900">
-        <span className="block bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">विश्वसनीय</span>
+        <span className="block bg-gradient-to-r from-teal-700 to-emerald-700 bg-clip-text text-transparent">विश्वसनीय</span>
         Home Services
       </h1>
       <p className="text-lg text-gray-600 mb-6 max-w-md mx-auto font-light">
@@ -198,15 +198,15 @@ const FixKaro = () => {
       </p>
 
       <div className="flex justify-center flex-wrap gap-3 mb-8">
-        <div className="bg-white px-4 py-2 rounded-full shadow-md border border-gray-200 text-emerald-600 font-medium text-sm flex items-center gap-2">
+        <div className="bg-white px-4 py-2 rounded-full shadow-md border border-gray-200 text-emerald-700 font-medium text-sm flex items-center gap-2">
           <CheckCircle className="h-4 w-4" />
           <span>सत्यापित Pros</span>
         </div>
-        <div className="bg-white px-4 py-2 rounded-full shadow-md border border-gray-200 text-emerald-600 font-medium text-sm flex items-center gap-2">
+        <div className="bg-white px-4 py-2 rounded-full shadow-md border border-gray-200 text-emerald-700 font-medium text-sm flex items-center gap-2">
           <Star className="h-4 w-4" />
           <span>4.9/5 रेटिंग</span>
         </div>
-        <div className="bg-white px-4 py-2 rounded-full shadow-md border border-gray-200 text-emerald-600 font-medium text-sm flex items-center gap-2">
+        <div className="bg-white px-4 py-2 rounded-full shadow-md border border-gray-200 text-emerald-700 font-medium text-sm flex items-center gap-2">
           <CheckCircle className="h-4 w-4" />
           <span>सुरक्षित Booking</span>
         </div>
@@ -218,7 +218,7 @@ const FixKaro = () => {
           placeholder="Search for services..."
           className="flex-1 px-5 py-4 bg-gray-50 text-base outline-none"
         />
-        <button className="px-5 bg-gradient-to-r from-teal-500 to-emerald-500 text-white font-semibold hover:from-teal-600 hover:to-emerald-600 transition-colors">
+        <button className="px-5 bg-gradient-to-r from-teal-600 to-emerald-600 text-white font-semibold hover:from-teal-700 hover:to-emerald-700 transition-colors">
           <Search className="h-5 w-5" />
         </button>
       </div>
@@ -229,9 +229,9 @@ const FixKaro = () => {
     <section className="mx-4 mb-6 bg-white rounded-2xl shadow-lg p-6">
       <div className="flex justify-between items-center mb-5">
         <h2 className="text-xl font-semibold text-gray-900">
-          <span className="bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">लोकप्रिय</span> Services
+          <span className="bg-gradient-to-r from-teal-700 to-emerald-700 bg-clip-text text-transparent">लोकप्रिय</span> Services
         </h2>
-        <button className="text-teal-600 font-medium text-sm flex items-center gap-1 hover:text-teal-700">
+        <button className="text-teal-700 font-medium text-sm flex items-center gap-1 hover:text-teal-800">
           View All <ArrowRight className="h-4 w-4" />
         </button>
       </div>
@@ -240,7 +240,7 @@ const FixKaro = () => {
           <div
             key={key}
             onClick={() => showService(key)}
-            className="bg-white border border-gray-200 rounded-2xl p-5 text-center cursor-pointer hover:shadow-lg hover:border-teal-300 hover:-translate-y-1 transition-all"
+            className="bg-white border border-gray-200 rounded-2xl p-5 text-center cursor-pointer hover:shadow-lg hover:border-teal-400 hover:-translate-y-1 transition-all"
           >
             <div className="w-15 h-15 bg-gradient-to-r from-teal-50 to-emerald-50 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl hover:bg-teal-100 transition-colors">
               {service.icon}
@@ -261,30 +261,30 @@ const FixKaro = () => {
 
   const ProviderCardSkeleton = () => (
     <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden relative">
-      <div className="h-40 bg-gray-200 animate-pulse"></div>
+      <div className="h-40 bg-teal-100 animate-pulse"></div>
       <div className="p-5">
-        <div className="h-6 bg-gray-200 rounded w-3/4 mb-4 animate-pulse"></div>
-        <div className="h-4 bg-gray-200 rounded w-1/2 mb-3 animate-pulse"></div>
-        <div className="h-4 bg-gray-200 rounded w-2/3 mb-4 animate-pulse"></div>
+        <div className="h-6 bg-teal-100 rounded w-3/4 mb-4 animate-pulse"></div>
+        <div className="h-4 bg-teal-100 rounded w-1/2 mb-3 animate-pulse"></div>
+        <div className="h-4 bg-teal-100 rounded w-2/3 mb-4 animate-pulse"></div>
 
         <div className="flex justify-between pt-4 border-t border-gray-100 mb-4">
           <div className="text-center">
-            <div className="h-6 bg-gray-200 rounded w-8 mx-auto mb-1 animate-pulse"></div>
-            <div className="h-3 bg-gray-200 rounded w-16 mx-auto animate-pulse"></div>
+            <div className="h-6 bg-teal-100 rounded w-8 mx-auto mb-1 animate-pulse"></div>
+            <div className="h-3 bg-teal-100 rounded w-16 mx-auto animate-pulse"></div>
           </div>
           <div className="text-center">
-            <div className="h-6 bg-gray-200 rounded w-12 mx-auto mb-1 animate-pulse"></div>
-            <div className="h-3 bg-gray-200 rounded w-16 mx-auto animate-pulse"></div>
+            <div className="h-6 bg-teal-100 rounded w-12 mx-auto mb-1 animate-pulse"></div>
+            <div className="h-3 bg-teal-100 rounded w-16 mx-auto animate-pulse"></div>
           </div>
           <div className="text-center">
-            <div className="h-6 bg-gray-200 rounded w-8 mx-auto mb-1 animate-pulse"></div>
-            <div className="h-3 bg-gray-200 rounded w-16 mx-auto animate-pulse"></div>
+            <div className="h-6 bg-teal-100 rounded w-8 mx-auto mb-1 animate-pulse"></div>
+            <div className="h-3 bg-teal-100 rounded w-16 mx-auto animate-pulse"></div>
           </div>
         </div>
 
         <div className="flex gap-2">
-          <div className="flex-1 h-10 bg-gray-200 rounded-full animate-pulse"></div>
-          <div className="flex-1 h-10 bg-gray-200 rounded-full animate-pulse"></div>
+          <div className="flex-1 h-10 bg-teal-100 rounded-full animate-pulse"></div>
+          <div className="flex-1 h-10 bg-teal-100 rounded-full animate-pulse"></div>
         </div>
       </div>
     </div>
@@ -294,9 +294,9 @@ const FixKaro = () => {
     <section className="mx-4 mb-6 bg-white rounded-2xl shadow-lg p-6">
       <div className="flex justify-between items-center mb-5">
         <h2 className="text-xl font-semibold text-gray-900">
-          <span className="bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">शीर्ष रेटेड</span> Professionals
+          <span className="bg-gradient-to-r from-teal-700 to-emerald-700 bg-clip-text text-transparent">शीर्ष रेटेड</span> Professionals
         </h2>
-        <button className="text-teal-600 font-medium text-sm flex items-center gap-1 hover:text-teal-700">
+        <button className="text-teal-700 font-medium text-sm flex items-center gap-1 hover:text-teal-800">
           View All <ArrowRight className="h-4 w-4" />
         </button>
       </div>
@@ -310,31 +310,31 @@ const FixKaro = () => {
         ) : (
           providersWithDistance.map((provider) => (
             <div key={`${provider.serviceKey}-${provider.name}`} className="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all relative">
-              <div className="absolute top-4 left-4 bg-gradient-to-r from-teal-500 to-emerald-500 text-white px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1 z-10">
+              <div className="absolute top-4 left-4 bg-gradient-to-r from-teal-600 to-emerald-600 text-white px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1 z-10">
                 <CheckCircle className="h-3 w-3" />
                 सत्यापित
               </div>
-              <div className="h-40 bg-gradient-to-r from-teal-600 to-emerald-600 flex items-center justify-center text-6xl text-white">
+              <div className="h-40 bg-gradient-to-r from-teal-700 to-emerald-700 flex items-center justify-center text-6xl text-white">
                 {services[provider.serviceKey]?.icon}
               </div>
               <div className="p-5">
                 <h3 className="text-lg font-semibold text-gray-900 mb-1">{provider.name}</h3>
-                <span className="text-teal-600 font-semibold text-sm block mb-3">{services[provider.serviceKey]?.title.replace('सेवाएं', 'विशेषज्ञ')}</span>
+                <span className="text-teal-700 font-semibold text-sm block mb-3">{services[provider.serviceKey]?.title.replace('सेवाएं', 'विशेषज्ञ')}</span>
                 <div className="flex items-center gap-2 text-gray-500 text-sm mb-4">
                   <MapPin className="h-4 w-4" />
                   {provider.location} ({provider.distance} किमी)
                 </div>
                 <div className="flex justify-between pt-4 border-t border-gray-100 mb-4">
                   <div className="text-center">
-                    <div className="font-bold text-lg text-teal-600">{provider.rating}</div>
+                    <div className="font-bold text-lg text-teal-700">{provider.rating}</div>
                     <div className="text-xs text-gray-500">रेटिंग</div>
                   </div>
                   <div className="text-center">
-                    <div className="font-bold text-lg text-teal-600">{provider.reviews}+</div>
+                    <div className="font-bold text-lg text-teal-700">{provider.reviews}+</div>
                     <div className="text-xs text-gray-500">समीक्षाएं</div>
                   </div>
                   <div className="text-center">
-                    <div className="font-bold text-lg text-teal-600">{provider.responseRate}%</div>
+                    <div className="font-bold text-lg text-teal-700">{provider.responseRate}%</div>
                     <div className="text-xs text-gray-500">प्रतिक्रिया</div>
                   </div>
                 </div>
@@ -343,7 +343,7 @@ const FixKaro = () => {
                     <User className="h-4 w-4" />
                     प्रोफाइल
                   </button>
-                  <button className="flex-1 px-4 py-2 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-full font-semibold text-sm hover:from-teal-600 hover:to-emerald-600 flex items-center justify-center gap-2">
+                  <button className="flex-1 px-4 py-2 bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-full font-semibold text-sm hover:from-teal-700 hover:to-emerald-700 flex items-center justify-center gap-2">
                     💬 चैट
                   </button>
                 </div>
@@ -370,7 +370,7 @@ const FixKaro = () => {
     }, [currentService]);
 
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-teal-50">
         <div className="bg-white px-4 py-4 flex items-center gap-4 border-b border-gray-200">
           <button
             onClick={() => setCurrentPage('home')}
@@ -395,22 +395,22 @@ const FixKaro = () => {
             {loading ? (
               <div className="space-y-4">
                 <div className="bg-white rounded-2xl p-5 flex items-center gap-4 shadow-md border border-gray-200">
-                  <div className="w-15 h-15 bg-gray-200 rounded-full animate-pulse"></div>
+                  <div className="w-15 h-15 bg-teal-100 rounded-full animate-pulse"></div>
                   <div className="flex-1 space-y-2">
-                    <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse"></div>
-                    <div className="h-3 bg-gray-200 rounded w-1/2 animate-pulse"></div>
-                    <div className="h-3 bg-gray-200 rounded w-2/3 animate-pulse"></div>
+                    <div className="h-4 bg-teal-100 rounded w-3/4 animate-pulse"></div>
+                    <div className="h-3 bg-teal-100 rounded w-1/2 animate-pulse"></div>
+                    <div className="h-3 bg-teal-100 rounded w-2/3 animate-pulse"></div>
                   </div>
-                  <div className="h-10 w-24 bg-gray-200 rounded-full animate-pulse"></div>
+                  <div className="h-10 w-24 bg-teal-100 rounded-full animate-pulse"></div>
                 </div>
                 <div className="bg-white rounded-2xl p-5 flex items-center gap-4 shadow-md border border-gray-200">
-                  <div className="w-15 h-15 bg-gray-200 rounded-full animate-pulse"></div>
+                  <div className="w-15 h-15 bg-teal-100 rounded-full animate-pulse"></div>
                   <div className="flex-1 space-y-2">
-                    <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse"></div>
-                    <div className="h-3 bg-gray-200 rounded w-1/2 animate-pulse"></div>
-                    <div className="h-3 bg-gray-200 rounded w-2/3 animate-pulse"></div>
+                    <div className="h-4 bg-teal-100 rounded w-3/4 animate-pulse"></div>
+                    <div className="h-3 bg-teal-100 rounded w-1/2 animate-pulse"></div>
+                    <div className="h-3 bg-teal-100 rounded w-2/3 animate-pulse"></div>
                   </div>
-                  <div className="h-10 w-24 bg-gray-200 rounded-full animate-pulse"></div>
+                  <div className="h-10 w-24 bg-teal-100 rounded-full animate-pulse"></div>
                 </div>
               </div>
             ) : serviceProviders.length > 0 ? (
@@ -422,7 +422,7 @@ const FixKaro = () => {
                     </div>
                     <div className="flex-1">
                       <div className="font-semibold text-gray-900 mb-1">{provider.name}</div>
-                      <div className="flex items-center gap-1 text-orange-500 text-sm mb-1">
+                      <div className="flex items-center gap-1 text-amber-500 text-sm mb-1">
                         <Star className="h-4 w-4 fill-current" />
                         {provider.rating} ({provider.reviews} समीक्षाएं)
                       </div>
@@ -431,7 +431,7 @@ const FixKaro = () => {
                         {provider.location}
                       </div>
                     </div>
-                    <button className="px-4 py-2 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-full font-medium text-sm hover:from-teal-600 hover:to-emerald-600">
+                    <button className="px-4 py-2 bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-full font-medium text-sm hover:from-teal-700 hover:to-emerald-700">
                       बुक करें
                     </button>
                   </div>
@@ -439,12 +439,12 @@ const FixKaro = () => {
               </div>
             ) : (
               <div className="text-center py-8 bg-white rounded-2xl shadow-sm border border-gray-200">
-                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                <div className="w-16 h-16 bg-teal-50 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
                   {services[currentService]?.icon}
                 </div>
                 <h4 className="text-lg font-semibold text-gray-900 mb-2">कोई पेशेवर उपलब्ध नहीं</h4>
                 <p className="text-gray-600 mb-4">हम जल्द ही आपके क्षेत्र में इस सेवा के लिए पेशेवरों को जोड़ेंगे</p>
-                <button className="px-6 py-2 bg-gray-100 border border-gray-300 rounded-full text-sm font-medium hover:bg-gray-200">
+                <button className="px-6 py-2 bg-teal-50 border border-teal-100 rounded-full text-sm font-medium hover:bg-teal-100 text-teal-700">
                   सूचित करें जब उपलब्ध हो
                 </button>
               </div>
@@ -456,7 +456,7 @@ const FixKaro = () => {
   };
 
   const NotificationsPage = () => (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-teal-50">
       <div className="bg-white px-4 py-4 flex items-center justify-between border-b border-gray-200">
         <div className="flex items-center gap-4">
           <button
@@ -480,14 +480,14 @@ const FixKaro = () => {
       <div className="p-3">
         {notifications.length === 0 ? (
           <div className="text-center py-16">
-            <Bell className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+            <Bell className="h-16 w-16 text-teal-300 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-gray-900 mb-2">कोई सूचना नहीं</h3>
             <p className="text-gray-600">आपके पास कोई नई सूचना नहीं है</p>
           </div>
         ) : (
           <div className="space-y-3">
             {notifications.map((notification) => (
-              <div key={notification.id} className={`bg-white rounded-xl p-4 border-l-4 shadow-sm ${notification.unread ? 'border-teal-500 bg-teal-50' : 'border-gray-300'
+              <div key={notification.id} className={`bg-white rounded-xl p-4 border-l-4 shadow-sm ${notification.unread ? 'border-teal-600 bg-teal-50' : 'border-gray-300'
                 }`}>
                 <div className="flex items-start gap-3">
                   <notification.icon className="h-5 w-5 text-teal-600 mt-0.5" />
@@ -518,7 +518,7 @@ const FixKaro = () => {
           key={item.id}
           onClick={() => setCurrentPage(item.id === 'home' ? 'home' : item.id)}
           className={`flex flex-col items-center py-2 px-3 rounded-lg text-xs font-medium transition-colors ${currentPage === (item.id === 'home' ? 'home' : item.id)
-            ? 'text-teal-600'
+            ? 'text-teal-700'
             : 'text-gray-500'
             }`}
         >
@@ -533,20 +533,20 @@ const FixKaro = () => {
   );
 
   const InstallBanner = () => showInstallBanner && (
-    <div className="fixed bottom-16 left-4 right-4 bg-white rounded-2xl p-4 shadow-xl border border-gray-200 flex items-center gap-4 z-40 max-w-lg mx-auto animate-bounce">
-      <div className="w-12 h-12 bg-gradient-to-r from-teal-500 to-emerald-500 rounded-xl flex items-center justify-center text-white text-xl">
+    <div className="fixed bottom-16 left-4 right-4 bg-white rounded-2xl p-4 shadow-xl border border-teal-200 flex items-center gap-4 z-40 max-w-lg mx-auto animate-bounce">
+      <div className="w-12 h-12 bg-gradient-to-r from-teal-600 to-emerald-600 rounded-xl flex items-center justify-center text-white text-xl">
         <Wrench className="h-6 w-6" />
       </div>
       <div className="flex-1">
         <h4 className="font-semibold text-gray-900 mb-1">
-          Fix<span className="text-teal-600">Karo</span> App
+          Fix<span className="text-teal-700">Karo</span> App
         </h4>
         <p className="text-sm text-gray-600">बेहतर अनुभव के लिए इंस्टॉल करें</p>
       </div>
       <div className="flex gap-2">
         <button
           onClick={() => setShowInstallBanner(false)}
-          className="px-3 py-2 text-sm font-semibold bg-gray-100 text-gray-900 rounded-full border border-gray-300 hover:bg-gray-200"
+          className="px-3 py-2 text-sm font-semibold bg-teal-50 text-teal-700 rounded-full border border-teal-200 hover:bg-teal-100"
         >
           बाद में
         </button>
@@ -555,7 +555,7 @@ const FixKaro = () => {
             alert("App installation would be triggered here in a real PWA");
             setShowInstallBanner(false);
           }}
-          className="px-3 py-2 text-sm font-semibold bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-full hover:from-teal-600 hover:to-emerald-600"
+          className="px-3 py-2 text-sm font-semibold bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-full hover:from-teal-700 hover:to-emerald-700"
         >
           इंस्टॉल
         </button>
@@ -564,10 +564,10 @@ const FixKaro = () => {
   );
 
   const HomePage = () => (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen bg-teal-50 pb-20">
       <LocationBar />
       <Header />
-      <div className="bg-gray-50">
+      <div className="bg-teal-50">
         <Hero />
         <ServicesGrid />
         <ProvidersSection />
@@ -580,6 +580,7 @@ const FixKaro = () => {
       <Head>
         <title>FixKaro - Home Services App</title>
         <link rel="icon" href="/favicon.ico" />
+        <meta name="theme-color" content="#0d9488" />
       </Head>
 
       <div className="max-w-lg mx-auto bg-white min-h-screen relative overflow-hidden shadow-2xl">
@@ -587,13 +588,13 @@ const FixKaro = () => {
         {currentPage === 'service' && <ServiceDetailPage />}
         {currentPage === 'notifications' && <NotificationsPage />}
         {currentPage !== 'home' && currentPage !== 'service' && currentPage !== 'notifications' && (
-          <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="min-h-screen bg-teal-50 flex items-center justify-center">
             <div className="text-center">
               <h2 className="text-2xl font-bold text-gray-900 mb-2">{currentPage} Page</h2>
               <p className="text-gray-600">This page is under construction</p>
               <button
                 onClick={() => setCurrentPage('home')}
-                className="mt-4 px-6 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 text-white rounded-full font-semibold hover:from-teal-600 hover:to-emerald-600"
+                className="mt-4 px-6 py-3 bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-full font-semibold hover:from-teal-700 hover:to-emerald-700"
               >
                 Go Home
               </button>
