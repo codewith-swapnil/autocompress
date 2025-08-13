@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import { services, locations, notifications as initialNotifications } from '../data/services';
 import LocationBar from '../components/common/LocationBar';
@@ -20,14 +20,55 @@ const Home = () => {
   const [providersWithDistance, setProvidersWithDistance] = useState([]);
   const [loadingProviders, setLoadingProviders] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  
+  const deferredPrompt = useRef(null);
 
+  // PWA Installation Handling
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowInstallBanner(true);
-    }, 3000);
-    return () => clearTimeout(timer);
+    // Handle beforeinstallprompt event
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault();
+      deferredPrompt.current = e;
+      
+      // Only show banner if not running in standalone mode (already installed)
+      if (!window.matchMedia('(display-mode: standalone)').matches) {
+        setShowInstallBanner(true);
+      }
+    };
+
+    // Handle app installed event
+    const handleAppInstalled = () => {
+      console.log('PWA was installed');
+      setShowInstallBanner(false);
+      deferredPrompt.current = null;
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    window.addEventListener('appinstalled', handleAppInstalled);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', handleAppInstalled);
+    };
   }, []);
 
+  const handleInstallClick = async () => {
+    if (!deferredPrompt.current) return;
+    
+    deferredPrompt.current.prompt();
+    const { outcome } = await deferredPrompt.current.userChoice;
+    
+    if (outcome === 'accepted') {
+      console.log('User accepted the install prompt');
+      setShowInstallBanner(false);
+    } else {
+      console.log('User dismissed the install prompt');
+    }
+    
+    deferredPrompt.current = null;
+  };
+
+  // Providers data initialization
   useEffect(() => {
     const providers = Object.entries(services)
       .filter(([_, service]) => service.providers.length > 0)
@@ -110,6 +151,12 @@ const Home = () => {
         <meta name="theme-color" content="#0d9488" />
         <meta name="description" content="Book reliable home services professionals for all your needs" />
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        {/* PWA-specific meta tags */}
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="apple-touch-icon" href="/icons/apple-icon-180.png" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="mobile-web-app-capable" content="yes" />
       </Head>
 
       {/* Remove fixed max-width and shadow */}
@@ -157,7 +204,8 @@ const Home = () => {
           <Navigation currentPage={currentPage} setCurrentPage={goToPage} />
           <InstallBanner 
             showInstallBanner={showInstallBanner} 
-            setShowInstallBanner={setShowInstallBanner} 
+            setShowInstallBanner={setShowInstallBanner}
+            onInstallClick={handleInstallClick}
           />
         </div>
       </div>

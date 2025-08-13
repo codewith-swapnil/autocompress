@@ -2,81 +2,38 @@ import { Wrench, X } from 'lucide-react';
 import { useTranslation } from '../../context/TranslationContext';
 import { useEffect, useState } from 'react';
 
-const InstallBanner = ({ showInstallBanner, setShowInstallBanner }) => {
-  const { translations } = useTranslation();
-  const [isVisible, setIsVisible] = useState(showInstallBanner);
-  const [isClosing, setIsClosing] = useState(false);
-
-  useEffect(() => {
-    if (showInstallBanner) {
-      setIsVisible(true);
-    } else {
-      // Trigger closing animation before hiding
-      setIsClosing(true);
-      const timer = setTimeout(() => {
-        setIsVisible(false);
-        setIsClosing(false);
-      }, 300);
-      return () => clearTimeout(timer);
-    }
-  }, [showInstallBanner]);
-
-  if (!isVisible) return null;
-
-  const handleInstall = () => {
-    alert("App installation would be triggered here in a real PWA");
-    setShowInstallBanner(false);
-  };
+// components/common/InstallBanner.js
+export default function InstallBanner({ showInstallBanner, setShowInstallBanner, onInstallClick }) {
+  if (!showInstallBanner) return null;
 
   return (
-    <div className={`fixed bottom-4 left-4 right-4 bg-white rounded-2xl p-4 shadow-2xl border border-teal-100 z-40 max-w-lg mx-auto transition-all duration-300 ${
-      isClosing ? 'translate-y-[150%] opacity-0' : 'translate-y-0 opacity-100'
-    }`}>
-      {/* Close button */}
-      <button
-        onClick={() => setShowInstallBanner(false)}
-        className="absolute top-3 right-3 p-1 rounded-full hover:bg-gray-100 transition-colors"
-      >
-        <X className="h-5 w-5 text-gray-500" strokeWidth={2} />
-      </button>
-      
-      <div className="flex items-start gap-4 pr-6">
-        {/* Animated icon container */}
-        <div className="relative">
-          <div className="absolute -inset-2 bg-teal-500/20 rounded-full animate-ping opacity-75"></div>
-          <div className="relative w-12 h-12 bg-gradient-to-r from-teal-600 to-emerald-600 rounded-xl flex items-center justify-center text-white">
-            <Wrench className="h-6 w-6" strokeWidth={2} />
+    <div className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white text-sm p-3">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center">
+          <div className="mr-3 flex-shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
           </div>
+          <span>Install FixKaro for a better experience</span>
         </div>
-        
-        <div className="flex-1">
-          <h4 className="font-bold text-gray-900 mb-1 text-lg">
-            {translations.installApp}
-          </h4>
-          <p className="text-sm text-gray-600 mb-3">
-            {translations.language === 'hindi' 
-              ? "बेहतर अनुभव के लिए इंस्टॉल करें" 
-              : "Install for faster access and better experience"}
-          </p>
-          
-          <div className="flex gap-3 mt-2">
-            <button
-              onClick={() => setShowInstallBanner(false)}
-              className="px-4 py-2.5 text-sm font-medium bg-white text-gray-600 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors flex-1 shadow-sm"
-            >
-              {translations.installLater}
-            </button>
-            <button
-              onClick={handleInstall}
-              className="px-4 py-2.5 text-sm font-bold bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-xl hover:from-teal-700 hover:to-emerald-700 transition-all transform hover:-translate-y-0.5 shadow-lg shadow-teal-500/20 flex-1"
-            >
-              {translations.install}
-            </button>
-          </div>
+        <div className="flex items-center">
+          <button 
+            onClick={onInstallClick}
+            className="bg-white text-teal-600 font-semibold py-1 px-4 rounded mr-2"
+          >
+            Install
+          </button>
+          <button 
+            onClick={() => setShowInstallBanner(false)}
+            className="text-white"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+            </svg>
+          </button>
         </div>
       </div>
     </div>
   );
-};
-
-export default InstallBanner;
+}

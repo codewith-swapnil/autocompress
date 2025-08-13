@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { TranslationProvider } from '../context/TranslationContext';
-import { ToastProvider } from '../context/ToastContext';
+import { ToastProvider, useToast } from '../context/ToastContext'; // Added useToast import
 import '../styles/globals.css';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -12,18 +12,86 @@ const variants = {
   exit: { opacity: 0, x: 200 }
 };
 
+// PWA Update Handler Component
+const PWAUpdater = () => {
+  const { showToast } = useToast(); // Now properly imported
+  const [swUpdate, setSwUpdate] = useState(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+      const handleSwUpdate = (registration) => {
+        setSwUpdate({
+          update: () => {
+            if (registration.waiting) {
+              registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+            }
+          },
+          reload: () => window.location.reload()
+        });
+      };
+
+      const registerSw = async () => {
+        try {
+          const registration = await navigator.serviceWorker.register('/sw.js');
+          
+          if (registration.waiting) {
+            handleSwUpdate(registration);
+            return;
+          }
+
+          registration.addEventListener('updatefound', () => {
+            const newWorker = registration.installing;
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && registration.waiting) {
+                handleSwUpdate(registration);
+              }
+            });
+          });
+
+          navigator.serviceWorker.addEventListener('controllerchange', () => {
+            window.location.reload();
+          });
+        } catch (error) {
+          console.error('Service worker registration failed:', error);
+        }
+      };
+
+      registerSw(); // Register immediately instead of waiting for load event
+    }
+  }, []);
+
+  useEffect(() => {
+    if (swUpdate) {
+      showToast({
+        message: 'A new version is available!',
+        type: 'info',
+        action: {
+          label: 'Update',
+          onClick: () => {
+            swUpdate.update();
+            showToast({
+              message: 'Updating... Page will reload shortly',
+              type: 'info',
+              duration: 3000
+            });
+          }
+        },
+        duration: 0
+      });
+    }
+  }, [swUpdate, showToast]);
+
+  return null;
+};
+
 export default function App({ Component, pageProps }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
-    // Hide splash screen after a brief delay
-    const splashTimer = setTimeout(() => {
-      setShowSplash(false);
-    }, 2000); // 2-second splash screen
-
-    // Route change handlers
+    const splashTimer = setTimeout(() => setShowSplash(false), 2000);
+    
     const handleRouteStart = () => setIsLoading(true);
     const handleRouteComplete = () => setIsLoading(false);
     
@@ -31,7 +99,6 @@ export default function App({ Component, pageProps }) {
     router.events.on('routeChangeComplete', handleRouteComplete);
     router.events.on('routeChangeError', handleRouteComplete);
     
-    // Clean up event listeners and timer
     return () => {
       clearTimeout(splashTimer);
       router.events.off('routeChangeStart', handleRouteStart);
@@ -50,9 +117,12 @@ export default function App({ Component, pageProps }) {
           <link rel="manifest" href="/manifest.json" />
           <link rel="apple-touch-icon" href="/icons/apple-icon-180.png" />
           <meta name="theme-color" content="#0d9488" />
+          <meta name="apple-mobile-web-app-capable" content="yes" />
+          <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+          <meta name="mobile-web-app-capable" content="yes" />
         </Head>
         
-        {/* PWA Splash Screen with Conditional Rendering */}
+        {/* PWA Splash Screen */}
         {showSplash && (
           <div className="fixed inset-0 bg-teal-600 z-[9999] flex flex-col items-center justify-center animate-fadeOut">
             <motion.div
@@ -90,7 +160,10 @@ export default function App({ Component, pageProps }) {
           )}
         </AnimatePresence>
 
-        {/* Main Content with Page Transitions */}
+        {/* PWA Update Handler */}
+        <PWAUpdater />
+
+        {/* Main Content */}
         <div className="bg-gray-50 min-h-screen">
           <AnimatePresence mode="wait" initial={false}>
             <motion.div

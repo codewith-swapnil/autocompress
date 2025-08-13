@@ -34,5 +34,12 @@
   "carpentry": "Carpentry",
   "acRepair": "AC Repair",
   "cleaning": "Cleaning",
-  "later": "Later"
+  "later": "Later",
+  "offlineWarning": "Available offline only",
+  "mainNavigation": "Main Navigation",
+  "locationPermissionDenied": "Location permission denied",
+  "locationUnavailable": "Location unavailable",
+  "locationTimeout": "Location request timed out",
+  "approximateLocation": "Approximate location",
+  "refreshLocation": "Refresh location"
 }

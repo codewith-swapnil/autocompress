@@ -4,10 +4,13 @@ import { useTranslation } from '../../context/TranslationContext';
 
 const LocationBar = ({ onLocationUpdate }) => {
   const { translations } = useTranslation();
-  const [currentLocation, setCurrentLocation] = useState(translations.gettingLocation || 'Getting location...');
+  const [currentLocation, setCurrentLocation] = useState(
+    translations.gettingLocation || 'Getting location...'
+  );
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [cachedLocation, setCachedLocation] = useState(null);
 
   // Extract area and city from address components
   const getAreaAndCity = (address) => {
@@ -21,11 +24,54 @@ const LocationBar = ({ onLocationUpdate }) => {
     return translations.currentLocation || 'Current Location';
   };
 
+  // Save location to localStorage
+  const saveLocationToCache = (location) => {
+    try {
+      localStorage.setItem('cachedLocation', JSON.stringify({
+        text: location.text,
+        coords: location.coords,
+        timestamp: Date.now()
+      }));
+    } catch (e) {
+      console.warn('Failed to save location to localStorage', e);
+    }
+  };
+
+  // Get cached location from localStorage
+  const getCachedLocation = () => {
+    try {
+      const cached = localStorage.getItem('cachedLocation');
+      if (!cached) return null;
+      
+      const location = JSON.parse(cached);
+      // Consider cached location valid for 1 hour
+      if (Date.now() - location.timestamp < 3600000) {
+        return location;
+      }
+    } catch (e) {
+      console.warn('Failed to get cached location', e);
+    }
+    return null;
+  };
+
   // Fetch user's location
   const fetchLocation = useCallback(() => {
     setIsLoading(true);
     setIsRefreshing(true);
     setError(null);
+    
+    // Try to get cached location first
+    const cached = getCachedLocation();
+    if (cached && !isRefreshing) {
+      setCurrentLocation(cached.text);
+      if (onLocationUpdate) {
+        onLocationUpdate(cached.coords);
+      }
+      setIsLoading(false);
+      setIsRefreshing(false);
+      return;
+    }
+
     setCurrentLocation(translations.gettingLocation || 'Getting location...');
 
     if (!navigator.geolocation) {
@@ -35,53 +81,102 @@ const LocationBar = ({ onLocationUpdate }) => {
       return;
     }
 
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        try {
-          const { latitude, longitude } = position.coords;
+    const handlePositionSuccess = async (position) => {
+      try {
+        const { latitude, longitude } = position.coords;
+        
+        // Create basic location object
+        const locationObj = {
+          lat: latitude,
+          lng: longitude,
+          address: null
+        };
+        
+        let locationText = '';
 
-          // Get readable address from coordinates
-          const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
-          );
-          const data = await response.json();
-
-          // Extract area and city from the address
-          const locationText = data.address ? getAreaAndCity(data.address) : translations.locationFound || 'Location found';
-          setCurrentLocation(locationText);
-
-          // Notify parent component with coordinates
-          if (onLocationUpdate) {
-            onLocationUpdate({
-              lat: latitude,
-              lng: longitude,
-              address: data.address
-            });
+        // Try to get address from service if online
+        if (navigator.onLine) {
+          try {
+            const response = await fetch(
+              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+            );
+            
+            if (!response.ok) throw new Error('Reverse geocode failed');
+            
+            const data = await response.json();
+            locationObj.address = data.address;
+            locationText = data.address ? getAreaAndCity(data.address) : 
+                          translations.locationFound || 'Location found';
+          } catch (err) {
+            console.warn('Reverse geocoding failed, using coordinates', err);
+            locationText = `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
           }
-        } catch (err) {
-          setError(translations.locationDetailsError || 'Failed to get details');
-        } finally {
-          setIsLoading(false);
-          setIsRefreshing(false);
+        } else {
+          // Offline mode
+          locationText = translations.approximateLocation || 'Approximate location';
         }
-      },
-      (err) => {
-        setError(translations.locationAccessError || 'Enable location access');
+        
+        setCurrentLocation(locationText);
+        saveLocationToCache({
+          text: locationText,
+          coords: locationObj
+        });
+
+        // Notify parent component
+        if (onLocationUpdate) {
+          onLocationUpdate(locationObj);
+        }
+      } catch (err) {
+        setError(translations.locationDetailsError || 'Failed to get details');
+      } finally {
         setIsLoading(false);
         setIsRefreshing(false);
-      },
+      }
+    };
+
+    const handlePositionError = (err) => {
+      let errorMessage = translations.locationAccessError || 'Enable location access';
+      
+      switch(err.code) {
+        case err.PERMISSION_DENIED:
+          errorMessage = translations.locationPermissionDenied || 'Location permission denied';
+          break;
+        case err.POSITION_UNAVAILABLE:
+          errorMessage = translations.locationUnavailable || 'Location unavailable';
+          break;
+        case err.TIMEOUT:
+          errorMessage = translations.locationTimeout || 'Location request timed out';
+          break;
+      }
+      
+      setError(errorMessage);
+      setIsLoading(false);
+      setIsRefreshing(false);
+    };
+
+    navigator.geolocation.getCurrentPosition(
+      handlePositionSuccess,
+      handlePositionError,
       {
         enableHighAccuracy: true,
         timeout: 10000,
-        maximumAge: 0
+        maximumAge: 30000 // Accept cached position up to 30 seconds old
       }
     );
-  }, [translations, onLocationUpdate]); // Add dependencies
+  }, [translations, onLocationUpdate, isRefreshing]);
 
   // Update useEffect dependencies
   useEffect(() => {
-    fetchLocation();
-  }, [fetchLocation]); // Add fetchLocation to dependencies
+    // Initialize with cached location if available
+    const cached = getCachedLocation();
+    if (cached) {
+      setCurrentLocation(cached.text);
+      setCachedLocation(cached);
+      setIsLoading(false);
+    } else {
+      fetchLocation();
+    }
+  }, [fetchLocation]);
 
   return (
     <div className="sticky top-0 z-50 bg-gradient-to-r from-teal-700 to-teal-600 px-4 py-3 flex items-center text-white shadow-lg">
@@ -112,6 +207,7 @@ const LocationBar = ({ onLocationUpdate }) => {
             ? 'bg-teal-800 text-teal-200'
             : 'bg-white/10 hover:bg-white/20 active:scale-95 border border-white/20 backdrop-blur-sm'
           }`}
+        aria-label={translations.refreshLocation || 'Refresh location'}
       >
         <RefreshCw
           className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`}
