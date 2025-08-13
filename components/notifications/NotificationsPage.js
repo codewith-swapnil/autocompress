@@ -5,14 +5,14 @@ const NotificationsPage = ({ notifications, clearNotifications, setCurrentPage }
     <div className="min-h-screen bg-gradient-to-b from-white to-teal-50 pb-24">
       {/* Header */}
       <div className="sticky top-0 z-40 bg-white/80 backdrop-blur-lg px-4 py-3 flex items-center justify-between border-b border-gray-100 shadow-sm">
-        <button 
+        <button
           onClick={() => setCurrentPage('home')}
           className="flex items-center gap-2 text-teal-700 font-semibold group"
         >
           <ArrowLeft className="h-5 w-5 group-hover:-translate-x-0.5 transition-transform" />
         </button>
         <h1 className="text-xl font-bold text-gray-900">Notifications</h1>
-        <button 
+        <button
           onClick={clearNotifications}
           className="text-teal-700 font-medium text-sm flex items-center gap-1 hover:text-teal-800"
           disabled={notifications.length === 0}
@@ -30,25 +30,23 @@ const NotificationsPage = ({ notifications, clearNotifications, setCurrentPage }
             </div>
             <h2 className="text-xl font-bold text-gray-900 mb-2">No notifications</h2>
             <p className="text-gray-600 max-w-md mx-auto">
-              You'll see important updates here when you have new messages or bookings
+              You&apos;ll see important updates here when you have new messages or bookings
             </p>
           </div>
         ) : (
           <div className="space-y-3">
             {notifications.map((notification, index) => (
-              <div 
-                key={index} 
-                className={`bg-white rounded-2xl shadow-sm border p-4 flex items-start gap-3 ${
-                  notification.unread 
-                    ? 'border-teal-300 bg-teal-50' 
+              <div
+                key={index}
+                className={`bg-white rounded-2xl shadow-sm border p-4 flex items-start gap-3 ${notification.unread
+                    ? 'border-teal-300 bg-teal-50'
                     : 'border-gray-200'
-                }`}
+                  }`}
               >
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                  notification.unread 
-                    ? 'bg-teal-100 text-teal-600' 
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${notification.unread
+                    ? 'bg-teal-100 text-teal-600'
                     : 'bg-gray-100 text-gray-500'
-                }`}>
+                  }`}>
                   <CheckCircle className="h-5 w-5" />
                 </div>
                 <div className="flex-1">

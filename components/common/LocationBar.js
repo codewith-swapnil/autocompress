@@ -1,5 +1,5 @@
 import { MapPin, RefreshCw, LocateFixed } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from '../../context/TranslationContext';
 
 const LocationBar = ({ onLocationUpdate }) => {
@@ -22,12 +22,12 @@ const LocationBar = ({ onLocationUpdate }) => {
   };
 
   // Fetch user's location
-  const fetchLocation = () => {
+  const fetchLocation = useCallback(() => {
     setIsLoading(true);
     setIsRefreshing(true);
     setError(null);
     setCurrentLocation(translations.gettingLocation || 'Getting location...');
-    
+
     if (!navigator.geolocation) {
       setError(translations.geolocationError || 'Geolocation not supported');
       setIsLoading(false);
@@ -39,21 +39,21 @@ const LocationBar = ({ onLocationUpdate }) => {
       async (position) => {
         try {
           const { latitude, longitude } = position.coords;
-          
+
           // Get readable address from coordinates
           const response = await fetch(
             `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
           );
           const data = await response.json();
-          
+
           // Extract area and city from the address
           const locationText = data.address ? getAreaAndCity(data.address) : translations.locationFound || 'Location found';
           setCurrentLocation(locationText);
-          
+
           // Notify parent component with coordinates
           if (onLocationUpdate) {
-            onLocationUpdate({ 
-              lat: latitude, 
+            onLocationUpdate({
+              lat: latitude,
               lng: longitude,
               address: data.address
             });
@@ -76,12 +76,12 @@ const LocationBar = ({ onLocationUpdate }) => {
         maximumAge: 0
       }
     );
-  };
+  }, [translations, onLocationUpdate]); // Add dependencies
 
-  // Initial location fetch
+  // Update useEffect dependencies
   useEffect(() => {
     fetchLocation();
-  }, [translations]);
+  }, [fetchLocation]); // Add fetchLocation to dependencies
 
   return (
     <div className="sticky top-0 z-50 bg-gradient-to-r from-teal-700 to-teal-600 px-4 py-3 flex items-center text-white shadow-lg">
@@ -95,7 +95,7 @@ const LocationBar = ({ onLocationUpdate }) => {
           )}
         </div>
       </div>
-      
+
       <div className="ml-3 flex-grow min-w-0">
         <div className="text-xs opacity-80 tracking-wide">
           {error ? translations.locationError || 'Location error' : translations.yourLocation || 'Your location'}
@@ -108,14 +108,13 @@ const LocationBar = ({ onLocationUpdate }) => {
       <button
         onClick={fetchLocation}
         disabled={isLoading}
-        className={`ml-2 px-3 py-2 text-sm flex items-center gap-1.5 rounded-full transition-all duration-300 ${
-          isLoading 
-            ? 'bg-teal-800 text-teal-200' 
+        className={`ml-2 px-3 py-2 text-sm flex items-center gap-1.5 rounded-full transition-all duration-300 ${isLoading
+            ? 'bg-teal-800 text-teal-200'
             : 'bg-white/10 hover:bg-white/20 active:scale-95 border border-white/20 backdrop-blur-sm'
-        }`}
+          }`}
       >
-        <RefreshCw 
-          className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} 
+        <RefreshCw
+          className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`}
         />
         <span className="hidden sm:inline">{translations.refresh || 'Refresh'}</span>
       </button>
