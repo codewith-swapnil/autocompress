@@ -16,7 +16,7 @@ const withPWA = require('next-pwa')({
         }
       }
     },
-    
+
     // Images
     {
       urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp|ico)$/,
@@ -29,7 +29,7 @@ const withPWA = require('next-pwa')({
         }
       }
     },
-    
+
     // API routes
     {
       urlPattern: /\/api\/services/,
@@ -43,7 +43,7 @@ const withPWA = require('next-pwa')({
         }
       }
     },
-    
+
     // Geocoding service
     {
       urlPattern: /^https:\/\/nominatim\.openstreetmap\.org\/reverse/,
@@ -59,7 +59,7 @@ const withPWA = require('next-pwa')({
         }
       }
     },
-    
+
     // Google Fonts
     {
       urlPattern: /^https:\/\/fonts\.(?:googleapis|gstatic)\.com/,
@@ -83,32 +83,16 @@ module.exports = withPWA({
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
   },
-  // Enable PWA in development for testing
-  pwa: {
-    disable: process.env.NODE_ENV === 'development' && !process.env.ENABLE_PWA_DEV,
-    dest: 'public',
-    publicExcludes: ['!noprecache/**/*'],
-  },
   // Cache headers for static assets
   async headers() {
     return [
       {
         source: '/:path*.(png|jpg|jpeg|gif|ico|svg|webp)',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable'
-          }
-        ]
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }]
       },
       {
-        source: '/_next/static/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable'
-          }
-        ]
+        source: '/_next/static/(.*)',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }]
       }
     ]
   }
