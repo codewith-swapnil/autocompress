@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import ServiceDetailPage from '../../components/service/ServiceDetailPage';
 import { services } from '../../data/services';
-import Layout from '../../components/common/Layout';
+import Layout from '../MainLayout';
 
 const ServicePage = () => {
   const router = useRouter();
