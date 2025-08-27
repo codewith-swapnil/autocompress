@@ -577,7 +577,7 @@ export default function HomePage() {
           <p className="text-gray-700 mb-4 text-lg">
             <span className="font-semibold text-indigo-700">How does image compression work?</span>
             <br />
-            Image compression, especially for formats like JPG and WebP, involves a 'lossy' algorithm. This means it intelligently reduces file size by discarding some visual data that is less perceptible to the human eye. For PNG and GIF, it uses 'lossless' techniques to reduce size without any quality loss. You maintain full control over the compression level using our intuitive quality slider or by setting individual image qualities.
+            Image compression, especially for formats like JPG and WebP, involves a &apos;lossy&apos; algorithm. This means it intelligently reduces file size by discarding some visual data that is less perceptible to the human eye. For PNG and GIF, it uses &apos;lossless&apos; techniques to reduce size without any quality loss. You maintain full control over the compression level using our intuitive quality slider or by setting individual image qualities.
           </p>
           <p className="text-gray-700 mb-4 text-lg">
             <span className="font-semibold text-indigo-700">What image formats are supported?</span>
@@ -601,7 +601,7 @@ export default function HomePage() {
                   Q: What image formats can I compress with AutoCompress?
                 </h4>
                 <p className="text-gray-700" itemProp="acceptedAnswer">
-                  A: AutoCompress currently supports JPG, JPEG, PNG, WebP, and GIF images. We're continuously working to expand our compatibility!
+                  A: AutoCompress currently supports JPG, JPEG, PNG, WebP, and GIF images. We&apos;re continuously working to expand our compatibility!
                 </p>
               </div>
               <div className="card p-6 shadow-md border border-blue-100" itemScope itemType="https://schema.org/Question">
@@ -617,7 +617,7 @@ export default function HomePage() {
                   Q: Is there a limit to how many images I can compress or their size?
                 </h4>
                 <p className="text-gray-700" itemProp="acceptedAnswer">
-                  A: You can compress up to 20 images in a single batch. Each image is compressed efficiently, with optimal settings applied to balance size and quality. There isn't a strict file size limit beyond your browser's capabilities, as all processing is done locally.
+                  A: You can compress up to 20 images in a single batch. Each image is compressed efficiently, with optimal settings applied to balance size and quality. There isn&apos;t a strict file size limit beyond your browser&apos;s capabilities, as all processing is done locally.
                 </p>
               </div>
               <div className="card p-6 shadow-md border border-blue-100" itemScope itemType="https://schema.org/Question">
@@ -625,7 +625,7 @@ export default function HomePage() {
                   Q: Can I use AutoCompress on my smartphone or tablet?
                 </h4>
                 <p className="text-gray-700" itemProp="acceptedAnswer">
-                  A: Absolutely! AutoCompress is designed with a fully responsive interface, ensuring a smooth and efficient experience whether you're using a desktop computer, laptop, tablet, or smartphone.
+                  A: Absolutely! AutoCompress is designed with a fully responsive interface, ensuring a smooth and efficient experience whether you&apos;re using a desktop computer, laptop, tablet, or smartphone.
                 </p>
               </div>
             </div>
