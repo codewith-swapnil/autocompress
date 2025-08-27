@@ -1,0 +1,194 @@
+'use client'; 
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
+import LanguageSelector from './LanguageSelector';
+
+export default function MainLayout({ children }) {
+  const { t } = useTranslation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <header className="relative">
+        {/* Main Navigation Bar */}
+        <nav className="w-full bg-gradient-to-r from-blue-800 via-indigo-700 to-purple-600 py-4 px-6 text-white text-center shadow-lg flex justify-between items-center sticky top-0 z-40 backdrop-blur-md bg-opacity-90">
+          <Link href="/" className="font-extrabold tracking-wide text-2xl md:text-3xl flex items-center gap-2" onClick={closeMobileMenu}>
+            <svg
+              className="w-8 h-8 md:w-9 md:h-9 text-purple-200 inline-block drop-shadow-md"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+            >
+              <path d="M12 20h9"></path>
+              <path d="M12 4v16m0 0H3m9 0a9 9 0 1 0 0-18 9 9 0 0 0 0 18z"></path>
+            </svg>
+             AutoCompress
+          </Link>
+
+          {/* Desktop Navigation Links */}
+          <div className="hidden md:flex items-center gap-4">
+            {/* Added Home Link for Desktop */}
+            <Link
+              href="/"
+              className="text-white hover:bg-white/20 font-semibold px-3 py-1 rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white text-sm"
+              onClick={closeMobileMenu}
+            >
+              {t("home", "Home")}
+            </Link>
+            <Link
+              href="/privacy-policy"
+              className="text-white hover:bg-white/20 font-semibold px-3 py-1 rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white text-sm"
+              onClick={closeMobileMenu}
+            >
+              {t("privacy_policy", "Privacy")}
+            </Link>
+            <Link
+              href="/terms"
+              className="text-white hover:bg-white/20 font-semibold px-3 py-1 rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white text-sm"
+              onClick={closeMobileMenu}
+            >
+              {t("terms", "Terms")}
+            </Link>
+            <Link
+              href="/contact"
+              className="text-white hover:bg-white/20 font-semibold px-3 py-1 rounded-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white text-sm"
+              onClick={closeMobileMenu}
+            >
+              {t("contact", "Contact")}
+            </Link>
+            <div className="relative">
+              <LanguageSelector />
+            </div>
+          </div>
+
+          {/* Mobile Menu Button (Hamburger Icon) */}
+          <div className="md:hidden flex items-center">
+            <button
+              onClick={toggleMobileMenu}
+              className="text-white focus:outline-none focus:ring-2 focus:ring-white p-2 rounded-md"
+              aria-label="Toggle navigation menu"
+            >
+              <svg
+                className="w-7 h-7"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                {isMobileMenuOpen ? (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  ></path>
+                ) : (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 6h16M4 12h16m-7 6h7"
+                  ></path>
+                )}
+              </svg>
+            </button>
+          </div>
+        </nav>
+
+        {/* Mobile Menu Overlay */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden fixed inset-0 bg-black bg-opacity-70 z-50 flex justify-end" onClick={closeMobileMenu}>
+            {/* Mobile Menu Content Panel */}
+            <div className="w-full max-w-xs bg-gradient-to-br from-blue-900 via-indigo-900 to-purple-800 text-white shadow-lg py-6 px-4 flex flex-col items-start animate-slide-in-right relative h-full overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+              {/* Close Button inside mobile menu */}
+              <button
+                onClick={closeMobileMenu}
+                className="absolute top-4 right-4 text-white hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white p-2 rounded-md"
+                aria-label="Close navigation menu"
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  ></path>
+                </svg>
+              </button>
+
+              {/* Mobile Menu Links */}
+              <div className="pt-16 w-full flex flex-col gap-2">
+                {/* Added Home Link for Mobile */}
+                <Link
+                  href="/"
+                  className="block w-full text-left py-3 px-4 rounded-lg hover:bg-white/10 transition-colors duration-200 text-lg font-medium"
+                  onClick={closeMobileMenu}
+                >
+                  {t("home", "Home")}
+                </Link>
+                <Link
+                  href="/privacy-policy"
+                  className="block w-full text-left py-3 px-4 rounded-lg hover:bg-white/10 transition-colors duration-200 text-lg font-medium"
+                  onClick={closeMobileMenu}
+                >
+                  {t("privacy_policy", "Privacy")}
+                </Link>
+                <Link
+                  href="/terms"
+                  className="block w-full text-left py-3 px-4 rounded-lg hover:bg-white/10 transition-colors duration-200 text-lg font-medium"
+                  onClick={closeMobileMenu}
+                >
+                  {t("terms", "Terms")}
+                </Link>
+                <Link
+                  href="/contact"
+                  className="block w-full text-left py-3 px-4 rounded-lg hover:bg-white/10 transition-colors duration-200 text-lg font-medium"
+                  onClick={closeMobileMenu}
+                >
+                  {t("contact", "Contact")}
+                </Link>
+              </div>
+              {/* Language Selector in Mobile Menu */}
+              <div className="w-full mt-4">
+                <LanguageSelector className="w-full" />
+              </div>
+            </div>
+          </div>
+        )}
+      </header>
+
+      <main className="flex-grow">
+        {children}
+      </main>
+
+      <footer className="w-full text-center text-sm text-gray-500 pb-8 mt-12 border-t border-gray-200 pt-6">
+        &copy; {new Date().getFullYear()} AutoCompress. {t("all_rights_reserved", "All rights reserved.")} |{" "}
+        <Link href="/privacy-policy" className="text-indigo-600 hover:underline" onClick={closeMobileMenu}>
+          {t("privacy_policy", "Privacy Policy")}
+        </Link> |{" "}
+        <Link href="/terms" className="text-indigo-600 hover:underline" onClick={closeMobileMenu}>
+          {t("terms_of_service", "Terms of Service")}
+        </Link> |{" "}
+        <Link href="/contact" className="text-indigo-600 hover:underline" onClick={closeMobileMenu}>
+          {t("contact_us", "Contact Us")}
+        </Link>
+      </footer>
+    </div>
+  );
+}
