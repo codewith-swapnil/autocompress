@@ -79,6 +79,11 @@ export default function HomePage() {
     [supportedImageTypes]
   );
 
+  const handleClearFiles = () => {
+    setFiles([]);
+    setCompressedFiles([]);
+  };
+
   const handleDrop = async (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -284,12 +289,11 @@ export default function HomePage() {
         <section id="compressor" className="w-full max-w-4xl mx-auto mt-16 px-4">
           {/* Enhanced File Drop Zone */}
           <div
-            className="border-2 border-dashed border-indigo-300 rounded-3xl p-8 mb-12 bg-white/90 backdrop-blur-sm shadow-lg transition-all duration-300 hover:border-purple-500 hover:shadow-xl flex flex-col items-center justify-center relative group min-h-[300px] text-center"
+            className="border-2 border-dashed border-indigo-300 rounded-3xl p-8 mb-12 bg-white/90 backdrop-blur-sm shadow-lg transition-all duration-300 hover:border-purple-500 hover:shadow-xl flex flex-col items-center justify-center relative group min-h-[300px] text-center cursor-pointer"
             onDrop={handleDrop}
             onDragOver={(e) => e.preventDefault()}
+            onClick={() => document.getElementById('fileInput').click()}
           >
-            <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-indigo-50/30 to-purple-50/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-
             <input
               type="file"
               multiple
@@ -300,11 +304,7 @@ export default function HomePage() {
               max={20}
             />
 
-            <label
-              htmlFor="fileInput"
-              className="cursor-pointer flex flex-col items-center justify-center gap-4 p-6 rounded-2xl transition-all duration-200 hover:bg-indigo-50/50"
-              tabIndex={0}
-            >
+            <div className="flex flex-col items-center justify-center gap-4 p-6 rounded-2xl">
               <div className="p-4 bg-indigo-100 rounded-full">
                 <svg className="w-12 h-12 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
@@ -312,20 +312,28 @@ export default function HomePage() {
               </div>
               <div>
                 <h3 className="text-2xl md:text-3xl font-bold text-indigo-800 mb-2">
-                  Drag & Drop or Click to Upload
+                  Click to Upload or Drag & Drop
                 </h3>
                 <p className="text-gray-600">
                   JPG, JPEG, PNG, WebP, GIF (Max 20 files)
                 </p>
               </div>
-              <button className="mt-4 px-6 py-2 bg-indigo-600 text-white rounded-full font-medium shadow-sm hover:bg-indigo-700 transition-colors">
-                Browse Files
-              </button>
-            </label>
+            </div>
 
             {files.length > 0 && (
-              <div className="absolute top-4 right-4 bg-indigo-600 text-white text-sm px-3 py-1 rounded-full shadow-md font-medium animate-pulse">
-                {files.length} selected
+              <div className="absolute top-4 right-4 flex gap-2">
+                <div className="bg-indigo-600 text-white text-sm px-3 py-1 rounded-full shadow-md font-medium">
+                  {files.length} selected
+                </div>
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleClearFiles();
+                  }}
+                  className="bg-red-500 text-white text-sm px-3 py-1 rounded-full shadow-md font-medium hover:bg-red-600 transition-colors"
+                >
+                  Clear All
+                </button>
               </div>
             )}
           </div>
@@ -395,9 +403,9 @@ export default function HomePage() {
                       onChange={handleQualityChange}
                       className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer accent-indigo-600"
                     />
-                    <div className="flex justify-between text-xs text-gray-500">
-                      <span>Smaller file</span>
-                      <span>Better quality</span>
+                    <div className="flex justify-between text-sm font-medium text-gray-700">
+                      <span className="text-red-600">Smaller file size</span>
+                      <span className="text-green-600">Better quality</span>
                     </div>
                   </div>
                 )}
