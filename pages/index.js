@@ -1,10 +1,14 @@
+'use client';
+
 import { useState, useEffect, useCallback } from "react";
 import Head from "next/head";
 import Script from "next/script";
 import imageCompression from "browser-image-compression";
 import JSZip from "jszip";
+import { useTranslation } from 'react-i18next';
 
 export default function HomePage() {
+  const { t } = useTranslation();
   const [files, setFiles] = useState([]);
   const [compressedFiles, setCompressedFiles] = useState([]);
   const [quality, setQuality] = useState(0.7);
@@ -170,7 +174,7 @@ export default function HomePage() {
       handleDownload(content, "autocompress-images.zip");
     } catch (error) {
       console.error("Error generating zip:", error);
-      alert("Failed to create zip file. Please try again.");
+      alert(t('zip_error'));
     } finally {
       setIsProcessing(false);
     }
@@ -181,26 +185,13 @@ export default function HomePage() {
     return Math.max(0, Math.round(100 - (compressedSize / originalSize) * 100));
   };
 
-  const seoLangs = [
-    { code: "en", label: "English" },
-    { code: "es", label: "Español" },
-    { code: "zh", label: "中文" },
-    { code: "hi", label: "हिन्दी" },
-    { code: "ar", label: "العربية" },
-    { code: "fr", label: "Français" },
-    { code: "ru", label: "Русский" },
-    { code: "pt", label: "Português" },
-    { code: "de", label: "Deutsch" },
-    { code: "ja", label: "日本語" },
-  ];
-
   return (
     <>
       <Head>
-        <title>AutoCompress - Compress Images Online (JPG, PNG, WebP, GIF)</title>
+        <title>{t('title')}</title>
         <meta
           name="description"
-          content="AutoCompress is a free online image compressor for JPG, PNG, WebP, and GIF formats. Optimize images instantly, adjust quality, and download in a snap. Privacy-focused: no uploads, all in-browser processing."
+          content={t('meta_description')}
         />
         <meta
           name="keywords"
@@ -210,11 +201,11 @@ export default function HomePage() {
 
         <meta
           property="og:title"
-          content="AutoCompress - Compress Images Online (JPG, PNG, WebP, GIF)"
+          content={t('title')}
         />
         <meta
           property="og:description"
-          content="AutoCompress is a free online image compressor for JPG, PNG, WebP, and GIF formats. Optimize images instantly, adjust quality, and download in a snap. Privacy-focused: no uploads, all in-browser processing."
+          content={t('meta_description')}
         />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://compressimages.vercel.app/" />
@@ -229,11 +220,11 @@ export default function HomePage() {
         <meta name="twitter:site" content="@yourtwitterhandle" />
         <meta
           name="twitter:title"
-          content="AutoCompress - Compress Images Online (JPG, PNG, WebP, GIF)"
+          content={t('title')}
         />
         <meta
           name="twitter:description"
-          content="AutoCompress is a free online image compressor for JPG, PNG, WebP, and GIF formats. Optimize images instantly, adjust quality, and download in a snap. Privacy-focused: no uploads, all in-browser processing."
+          content={t('meta_description')}
         />
         <meta
           name="twitter:image"
@@ -257,32 +248,28 @@ export default function HomePage() {
 
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-50">
         <section className="w-full bg-gradient-to-r from-blue-800 via-indigo-700 to-purple-600 py-20 px-4 text-white text-center shadow-2xl rounded-b-[4rem] relative overflow-hidden hero-section">
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-white/15 rounded-full blur-3xl opacity-60 animate-pulse-slow"></div>
-            <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-2xl opacity-50 animate-pulse-slow delay-500"></div>
-          </div>
           <h1 className="relative text-5xl md:text-7xl font-extrabold mb-6 tracking-tight drop-shadow-xl animate-fade-in hero-title">
-            Compress Images Online
+            {t('hero_title')}
           </h1>
           <p className="relative max-w-3xl mx-auto text-xl md:text-2xl font-medium mb-10 animate-fade-in delay-100 hero-subtitle">
-            Optimize JPG, PNG, WebP, and GIF images instantly. Drag & drop up to 20 files, adjust quality, and download all at once. Fast, private, and 100% free with in-browser processing.
+            {t('hero_subtitle')}
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-6 mb-6 animate-fade-in delay-200">
             <a
               href="#compressor"
               className="bg-white text-indigo-700 font-bold px-10 py-4 rounded-full shadow-lg hover:bg-indigo-50 transition-all duration-300 text-lg md:text-xl focus:outline-none focus:ring-4 focus:ring-white/50 transform hover:scale-105 btn"
             >
-              Start Compressing
+              {t('start_compressing')}
             </a>
             <a
               href="#about"
               className="bg-indigo-600 text-white font-semibold px-10 py-4 rounded-full shadow-lg hover:bg-indigo-800 transition-all duration-300 text-lg md:text-xl focus:outline-none focus:ring-4 focus:ring-white/50 transform hover:scale-105 btn"
             >
-              Learn More
+              {t('learn_more')}
             </a>
           </div>
           <p className="relative max-w-xl mx-auto text-base opacity-90 animate-fade-in delay-300">
-            100% Client-side: No uploads. All processing happens securely in your browser for maximum privacy.
+            {t('privacy_note')}
           </p>
         </section>
 
@@ -312,10 +299,10 @@ export default function HomePage() {
               </div>
               <div>
                 <h3 className="text-2xl md:text-3xl font-bold text-indigo-800 mb-2">
-                  Click to Upload or Drag & Drop
+                  {t('select_files')}
                 </h3>
                 <p className="text-gray-600">
-                  JPG, JPEG, PNG, WebP, GIF (Max 20 files)
+                  {t('supported_formats')}
                 </p>
               </div>
             </div>
@@ -323,16 +310,16 @@ export default function HomePage() {
             {files.length > 0 && (
               <div className="absolute top-4 right-4 flex gap-2">
                 <div className="bg-indigo-600 text-white text-sm px-3 py-1 rounded-full shadow-md font-medium">
-                  {files.length} selected
+                  {files.length} {t('files_selected')}
                 </div>
-                <button 
+                <button
                   onClick={(e) => {
                     e.stopPropagation();
                     handleClearFiles();
                   }}
                   className="bg-red-500 text-white text-sm px-3 py-1 rounded-full shadow-md font-medium hover:bg-red-600 transition-colors"
                 >
-                  Clear All
+                  {t('clear_all')}
                 </button>
               </div>
             )}
@@ -349,10 +336,10 @@ export default function HomePage() {
                   </svg>
                 </div>
                 <h4 className="text-lg font-semibold text-indigo-800">
-                  Optimizing your images...
+                  {t('processing_images')}
                 </h4>
                 <p className="text-gray-600 text-sm max-w-md">
-                  This may take a moment depending on file sizes and quantity
+                  {t('processing_tip')}
                 </p>
               </div>
             </div>
@@ -372,7 +359,7 @@ export default function HomePage() {
                       className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 transition-colors"
                     />
                     <label htmlFor="manualMode" className="text-gray-800 font-medium cursor-pointer">
-                      Advanced Mode
+                      {t('manual_mode')}
                     </label>
                   </div>
 
@@ -380,7 +367,7 @@ export default function HomePage() {
                     <svg className="h-4 w-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <span>Adjust quality per image</span>
+                    <span>{t('manual_mode_tip')}</span>
                   </div>
                 </div>
 
@@ -388,7 +375,7 @@ export default function HomePage() {
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <label htmlFor="quality" className="block font-medium text-gray-700">
-                        Compression Quality
+                        {t('global_compression_quality')}
                       </label>
                       <span className="font-bold text-indigo-700 bg-indigo-100 px-3 py-1 rounded-full text-sm">
                         {Math.round(quality * 100)}%
@@ -404,8 +391,8 @@ export default function HomePage() {
                       className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer accent-indigo-600"
                     />
                     <div className="flex justify-between text-sm font-medium text-gray-700">
-                      <span className="text-red-600">Smaller file size</span>
-                      <span className="text-green-600">Better quality</span>
+                      <span className="text-red-600">{t('smaller_size')}</span>
+                      <span className="text-green-600">{t('better_quality')}</span>
                     </div>
                   </div>
                 )}
@@ -428,12 +415,12 @@ export default function HomePage() {
                           <>
                             <img
                               src={URL.createObjectURL(compressed)}
-                              alt={`Compressed preview of ${original.name}`}
+                              alt={`${t('image_alt')} ${original.name}`}
                               className="w-full h-full object-contain"
                               loading="lazy"
                             />
                             <div className="absolute bottom-3 left-3 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">
-                              Saved {getCompressionSaving(original.size, compressed.size)}%
+                              {t('saved')} {getCompressionSaving(original.size, compressed.size)}%
                             </div>
                           </>
                         ) : unsupported ? (
@@ -444,7 +431,7 @@ export default function HomePage() {
                               </svg>
                             </div>
                             <h4 className="font-medium text-gray-800">
-                              Unsupported Format
+                              {t('unsupported_file')}
                             </h4>
                           </div>
                         ) : error ? (
@@ -455,7 +442,7 @@ export default function HomePage() {
                               </svg>
                             </div>
                             <h4 className="font-medium text-gray-800">
-                              Processing Error
+                              {t('compression_error')}
                             </h4>
                           </div>
                         ) : (
@@ -466,7 +453,7 @@ export default function HomePage() {
                               </svg>
                             </div>
                             <h4 className="font-medium text-gray-800">
-                              Processing...
+                              {t('processing')}
                             </h4>
                           </div>
                         )}
@@ -478,11 +465,11 @@ export default function HomePage() {
                             {original.name}
                           </h4>
                           <p className="text-xs text-gray-500 mt-1">
-                            Original: {(original.size / 1024).toFixed(1)} KB
+                            {t('original')}: {(original.size / 1024).toFixed(1)} KB
                           </p>
                           {compressed && (
                             <p className="text-xs text-gray-500">
-                              Compressed: {(compressed.size / 1024).toFixed(1)} KB
+                              {t('compressed')}: {(compressed.size / 1024).toFixed(1)} KB
                             </p>
                           )}
                         </div>
@@ -492,7 +479,7 @@ export default function HomePage() {
                             {manualMode && (
                               <div className="space-y-2">
                                 <label htmlFor={`quality-slider-${idx}`} className="block text-xs font-medium text-gray-700">
-                                  Quality
+                                  {t('individual_quality')}
                                 </label>
                                 <div className="flex items-center gap-3">
                                   <input
@@ -521,7 +508,7 @@ export default function HomePage() {
                               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                               </svg>
-                              Download
+                              {t('download')}
                             </button>
                           </div>
                         )}
@@ -543,14 +530,14 @@ export default function HomePage() {
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                           </svg>
-                          Preparing files...
+                          {t('generating_zip')}
                         </>
                       ) : (
                         <>
                           <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
                           </svg>
-                          Download All as ZIP
+                          {t('download_zip')}
                         </>
                       )}
                     </button>
@@ -577,63 +564,60 @@ export default function HomePage() {
 
         <section id="about" className="w-full max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl p-10 md:p-12 mb-16 mt-12 border border-blue-50 card">
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-indigo-800 text-center" itemProp="headline">
-            About AutoCompress
+            {t('about_swiftcompress')}
           </h2>
           <p className="text-gray-700 mb-4 text-lg" itemProp="description">
-            AutoCompress is your go-to free online tool for quickly and securely compressing images. Whether you need to optimize photos for your website, send large image files via email, or save storage space, our tool provides efficient compression for multiple formats.
+            {t('about_p1')}
           </p>
           <p className="text-gray-700 mb-4 text-lg">
-            <span className="font-semibold text-indigo-700">How does image compression work?</span>
+            <span className="font-semibold text-indigo-700">{t('how_compression_works_q')}</span>
             <br />
-            Image compression, especially for formats like JPG and WebP, involves a &apos;lossy&apos; algorithm. This means it intelligently reduces file size by discarding some visual data that is less perceptible to the human eye. For PNG and GIF, it uses &apos;lossless&apos; techniques to reduce size without any quality loss. You maintain full control over the compression level using our intuitive quality slider or by setting individual image qualities.
+            {t('how_compression_works_a')}
           </p>
           <p className="text-gray-700 mb-4 text-lg">
-            <span className="font-semibold text-indigo-700">What image formats are supported?</span>
+            <span className="font-semibold text-indigo-700">{t('supported_formats_q')}</span>
             <br />
-            AutoCompress supports the most common image formats: JPEG/JPG for photographs, PNG for images with transparency, WebP for modern web optimization, and GIF for animated images (though GIFs are primarily converted to static images for compression). Our goal is to provide versatile compression for all your needs.
+            {t('supported_formats_a_long')}
           </p>
           <p className="text-gray-700 mb-4 text-lg">
-            <span className="font-semibold text-indigo-700">Is AutoCompress safe and private?</span>
+            <span className="font-semibold text-indigo-700">{t('is_it_safe_q')}</span>
             <br />
-            Absolutely! Your privacy and security are paramount. All image compression and processing happen directly within your web browser. Your images are never uploaded to our servers or stored anywhere, ensuring your data remains completely private and secure.
-          </p>
-          <p className="text-gray-600 text-sm mt-6 text-center">
-            Built with React and Tailwind CSS for a fast and modern experience. Leveraging client-side processing for ultimate privacy.
+            {t('is_it_safe_a')}
           </p>
 
           <article className="mt-10 mx-auto" itemScope itemType="https://schema.org/FAQPage">
-            <h3 className="text-2xl md:text-3xl font-bold mb-5 text-purple-700 text-center">Frequently Asked Questions</h3>
+            <h3 className="text-2xl md:text-3xl font-bold mb-5 text-purple-700 text-center">{t('faq')}</h3>
             <div className="space-y-6">
               <div className="card p-6 shadow-md border border-blue-100" itemScope itemType="https://schema.org/Question">
                 <h4 className="font-bold text-xl text-indigo-700 mb-2" itemProp="name">
-                  Q: What image formats can I compress with AutoCompress?
+                  {t('faq_q1')}
                 </h4>
                 <p className="text-gray-700" itemProp="acceptedAnswer">
-                  A: AutoCompress currently supports JPG, JPEG, PNG, WebP, and GIF images. We&apos;re continuously working to expand our compatibility!
+                  {t('faq_a1')}
                 </p>
               </div>
               <div className="card p-6 shadow-md border border-blue-100" itemScope itemType="https://schema.org/Question">
                 <h4 className="font-bold text-xl text-indigo-700 mb-2" itemProp="name">
-                  Q: Will compressing my images reduce their quality significantly?
+                  {t('faq_q2')}
                 </h4>
                 <p className="text-gray-700" itemProp="acceptedAnswer">
-                  A: For lossy formats like JPG and WebP, some quality reduction is inherent, but our tool uses smart algorithms to minimize visible degradation. You can fine-tune the quality using the slider or manual mode to achieve the perfect balance between file size and visual fidelity.
+                  {t('faq_a2')}
                 </p>
               </div>
               <div className="card p-6 shadow-md border border-blue-100" itemScope itemType="https://schema.org/Question">
                 <h4 className="font-bold text-xl text-indigo-700 mb-2" itemProp="name">
-                  Q: Is there a limit to how many images I can compress or their size?
+                  {t('faq_q3')}
                 </h4>
                 <p className="text-gray-700" itemProp="acceptedAnswer">
-                  A: You can compress up to 20 images in a single batch. Each image is compressed efficiently, with optimal settings applied to balance size and quality. There isn&apos;t a strict file size limit beyond your browser&apos;s capabilities, as all processing is done locally.
+                  {t('faq_a3')}
                 </p>
               </div>
               <div className="card p-6 shadow-md border border-blue-100" itemScope itemType="https://schema.org/Question">
                 <h4 className="font-bold text-xl text-indigo-700 mb-2" itemProp="name">
-                  Q: Can I use AutoCompress on my smartphone or tablet?
+                  {t('faq_q4')}
                 </h4>
                 <p className="text-gray-700" itemProp="acceptedAnswer">
-                  A: Absolutely! AutoCompress is designed with a fully responsive interface, ensuring a smooth and efficient experience whether you&apos;re using a desktop computer, laptop, tablet, or smartphone.
+                  {t('faq_a4')}
                 </p>
               </div>
             </div>
@@ -644,10 +628,10 @@ export default function HomePage() {
           <div className="w-full max-w-4xl mx-auto my-8 p-6 bg-white rounded-xl shadow-md">
             <div className="text-center">
               <h3 className="text-xl font-semibold text-gray-800 mb-4">
-                More Compression Tools
+                {t('more_compression_tools')}
               </h3>
               <p className="text-gray-600 mb-4 mx-auto max-w-2xl">
-                Check out our other tools for PDF compression, video optimization, and more coming soon!
+                {t('tools_tip_content')}
               </p>
             </div>
             <div className="google-ad flex justify-center">
