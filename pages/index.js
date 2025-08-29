@@ -1,13 +1,16 @@
 'use client';
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import Head from "next/head";
 import Script from "next/script";
 import imageCompression from "browser-image-compression";
 import JSZip from "jszip";
 import { useTranslation } from 'react-i18next';
-import About from './about';
-import Compressor from './compressor';
+import dynamic from 'next/dynamic';
+
+// Dynamically import components to avoid SSR issues
+const About = dynamic(() => import('./about'), { ssr: false });
+const Compressor = dynamic(() => import('./compressor'), { ssr: false });
 
 export default function HomePage() {
   const { t } = useTranslation();
@@ -18,13 +21,14 @@ export default function HomePage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [showAd, setShowAd] = useState(false);
 
-  const supportedImageTypes = [
+  // Fixed: Wrap in useMemo to prevent dependency changes
+  const supportedImageTypes = useMemo(() => [
     "image/jpeg",
     "image/jpg",
     "image/png",
     "image/webp",
     "image/gif",
-  ];
+  ], []);
 
   useEffect(() => {
     if ((files.length > 0 || compressedFiles.length > 0) && !isProcessing) {
@@ -263,28 +267,32 @@ export default function HomePage() {
           </p>
         </section>
 
-        <Compressor
-          t={t}
-          files={files}
-          setFiles={setFiles}
-          compressedFiles={compressedFiles}
-          quality={quality}
-          setQuality={setQuality}
-          manualMode={manualMode}
-          setManualMode={setManualMode}
-          isProcessing={isProcessing}
-          showAd={showAd}
-          handleClearFiles={handleClearFiles}
-          handleDrop={handleDrop}
-          handleFileChange={handleFileChange}
-          handleQualityChange={handleQualityChange}
-          handleIndividualQualityChange={handleIndividualQualityChange}
-          handleDownload={handleDownload}
-          handleDownloadAll={handleDownloadAll}
-          getCompressionSaving={getCompressionSaving}
-        />
+        {typeof window !== 'undefined' && (
+          <>
+            <Compressor
+              t={t}
+              files={files}
+              setFiles={setFiles}
+              compressedFiles={compressedFiles}
+              quality={quality}
+              setQuality={setQuality}
+              manualMode={manualMode}
+              setManualMode={setManualMode}
+              isProcessing={isProcessing}
+              showAd={showAd}
+              handleClearFiles={handleClearFiles}
+              handleDrop={handleDrop}
+              handleFileChange={handleFileChange}
+              handleQualityChange={handleQualityChange}
+              handleIndividualQualityChange={handleIndividualQualityChange}
+              handleDownload={handleDownload}
+              handleDownloadAll={handleDownloadAll}
+              getCompressionSaving={getCompressionSaving}
+            />
 
-        <About t={t} />
+            <About t={t} />
+          </>
+        )}
 
         {showAd && (
           <div className="w-full max-w-4xl mx-auto my-8 p-6 bg-white rounded-xl shadow-md">

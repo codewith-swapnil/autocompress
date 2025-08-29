@@ -1,14 +1,19 @@
+'use client';
+
+import { useTranslation } from 'react-i18next';
+import { useState, useEffect } from 'react';
+
 export default function Compressor({
     t,
-    files,
+    files = [],
     setFiles,
-    compressedFiles,
-    quality,
+    compressedFiles = [],
+    quality = 0.7,
     setQuality,
-    manualMode,
+    manualMode = false,
     setManualMode,
-    isProcessing,
-    showAd,
+    isProcessing = false,
+    showAd = false,
     handleClearFiles,
     handleDrop,
     handleFileChange,
@@ -18,6 +23,7 @@ export default function Compressor({
     handleDownloadAll,
     getCompressionSaving
 }) {
+    const [isClient, setIsClient] = useState(false);
     const supportedImageTypes = [
         "image/jpeg",
         "image/jpg",
@@ -26,6 +32,15 @@ export default function Compressor({
         "image/gif",
     ];
 
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
+    // Prevent rendering on server
+    if (!isClient) {
+        return null;
+    }
+
     return (
         <section id="compressor" className="w-full max-w-4xl mx-auto mt-16 px-4">
             {/* Enhanced File Drop Zone */}
@@ -33,7 +48,7 @@ export default function Compressor({
                 className="border-2 border-dashed border-indigo-300 rounded-3xl p-8 mb-12 bg-white/90 backdrop-blur-sm shadow-lg transition-all duration-300 hover:border-purple-500 hover:shadow-xl flex flex-col items-center justify-center relative group min-h-[300px] text-center cursor-pointer"
                 onDrop={handleDrop}
                 onDragOver={(e) => e.preventDefault()}
-                onClick={() => document.getElementById('fileInput').click()}
+                onClick={() => document.getElementById('fileInput')?.click()}
             >
                 <input
                     type="file"
@@ -61,7 +76,7 @@ export default function Compressor({
                     </div>
                 </div>
 
-                {files.length > 0 && (
+                {files && files.length > 0 && (
                     <div className="absolute top-4 right-4 flex gap-2">
                         <div className="bg-indigo-600 text-white text-sm px-3 py-1 rounded-full shadow-md font-medium">
                             {files.length} {t('files_selected')}
@@ -100,7 +115,7 @@ export default function Compressor({
             )}
 
             {/* Compression Controls */}
-            {files.length > 0 && (
+            {files && files.length > 0 && (
                 <div className="bg-white/90 backdrop-blur-sm p-6 rounded-2xl shadow-lg mb-12 border border-indigo-100">
                     <div className="flex flex-col gap-6">
                         <div className="flex items-center justify-between">
@@ -155,7 +170,7 @@ export default function Compressor({
             )}
 
             {/* Results Grid */}
-            {compressedFiles.length > 0 && (
+            {compressedFiles && compressedFiles.length > 0 && (
                 <div className="mb-16 w-full px-4">
                     <div className="mx-auto max-w-7xl">
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
@@ -312,7 +327,7 @@ export default function Compressor({
             )}
 
             {/* Ad Space */}
-            {showAd && compressedFiles.length > 0 && (
+            {showAd && compressedFiles && compressedFiles.length > 0 && (
                 <div className="w-full my-12 p-6 bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-indigo-100">
                     <div className="google-ad">
                         <ins className="adsbygoogle"
