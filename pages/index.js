@@ -3,8 +3,6 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import Head from "next/head";
 import Script from "next/script";
-import imageCompression from "browser-image-compression";
-import JSZip from "jszip";
 import { useTranslation } from 'react-i18next';
 import dynamic from 'next/dynamic';
 
@@ -16,12 +14,12 @@ export default function HomePage() {
   const { t } = useTranslation();
   const [files, setFiles] = useState([]);
   const [compressedFiles, setCompressedFiles] = useState([]);
-  const [quality, setQuality] = useState(0.7);
+  const [quality, setQuality] = useState(0.5);
   const [manualMode, setManualMode] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [showAd, setShowAd] = useState(false);
+  const [zipBlob, setZipBlob] = useState(null);
 
-  // Fixed: Wrap in useMemo to prevent dependency changes
   const supportedImageTypes = useMemo(() => [
     "image/jpeg",
     "image/jpg",
@@ -41,52 +39,94 @@ export default function HomePage() {
     }
   }, [files, compressedFiles, isProcessing]);
 
+  // Add a function to get a compressed image for display
+  const getCompressedImageForDisplay = async (file, quality) => {
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('quality', quality.toString());
+
+      const response = await fetch('/api/compress', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Compression failed');
+      }
+
+      return await response.blob();
+    } catch (error) {
+      console.error("Error getting image for display:", error);
+      return null;
+    }
+  };
+
   const compressImages = useCallback(
     async (inputFiles, currentQuality) => {
       setIsProcessing(true);
-      const compressed = await Promise.all(
-        inputFiles.map(async (file) => {
-          if (supportedImageTypes.includes(file.type)) {
-            const options = {
-              maxSizeMB: 1,
-              maxWidthOrHeight: 1920,
-              useWebWorker: true,
-              initialQuality: currentQuality,
-            };
-            try {
-              const compressedBlob = await imageCompression(file, options);
-              return {
-                original: file,
-                compressed: compressedBlob,
-                id: file.name + file.lastModified,
-              };
-            } catch (error) {
-              console.error("Error compressing file:", file.name, error);
-              return {
-                original: file,
-                compressed: null,
-                error: true,
-                id: file.name + file.lastModified
-              };
-            }
-          }
-          return {
-            original: file,
-            compressed: null,
-            unsupported: true,
-            id: file.name + file.lastModified
-          };
-        })
-      );
-      setCompressedFiles(compressed);
-      setIsProcessing(false);
+      
+      try {
+        // First, get compressed versions for display
+        const displayPromises = inputFiles.map(file => 
+          getCompressedImageForDisplay(file, currentQuality)
+        );
+        
+        const displayBlobs = await Promise.all(displayPromises);
+        
+        // Create compressed files data with display blobs
+        const compressedFilesData = inputFiles.map((file, index) => ({
+          original: file,
+          compressed: displayBlobs[index],
+          id: file.name + file.lastModified,
+          displayOnly: true // Flag to indicate this is for display only
+        }));
+        
+        setCompressedFiles(compressedFilesData);
+        
+        // Then get the batch compression for download
+        const formData = new FormData();
+        formData.append('quality', currentQuality.toString());
+        
+        // Add all files to FormData
+        inputFiles.forEach(file => {
+          formData.append('images', file);
+        });
+
+        const response = await fetch('/api/compress-batch', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error('Batch compression failed');
+        }
+
+        // Get the zip file
+        const zipBlob = await response.blob();
+
+        // Store the zip blob for download
+        setZipBlob(zipBlob);
+      } catch (error) {
+        console.error("Error compressing files:", error);
+        // Handle error state
+        setCompressedFiles(inputFiles.map(file => ({
+          original: file,
+          compressed: null,
+          error: true,
+          id: file.name + file.lastModified
+        })));
+      } finally {
+        setIsProcessing(false);
+      }
     },
-    [supportedImageTypes]
+    [] // No dependencies needed
   );
 
   const handleClearFiles = () => {
     setFiles([]);
     setCompressedFiles([]);
+    setZipBlob(null);
   };
 
   const handleDrop = async (e) => {
@@ -124,23 +164,20 @@ export default function HomePage() {
   };
 
   const handleIndividualQualityChange = async (idx, originalFile, newIndividualQuality) => {
-    const options = {
-      maxSizeMB: 1,
-      maxWidthOrHeight: 1920,
-      useWebWorker: true,
-      initialQuality: newIndividualQuality,
-    };
     try {
-      const compressedBlob = await imageCompression(originalFile, options);
-      setCompressedFiles((prev) =>
-        prev.map((item, i) =>
-          i === idx ? {
-            ...item,
-            compressed: compressedBlob,
-            individualQuality: newIndividualQuality
-          } : item
-        )
-      );
+      const compressedBlob = await getCompressedImageForDisplay(originalFile, newIndividualQuality);
+      
+      if (compressedBlob) {
+        setCompressedFiles((prev) =>
+          prev.map((item, i) =>
+            i === idx ? {
+              ...item,
+              compressed: compressedBlob,
+              individualQuality: newIndividualQuality
+            } : item
+          )
+        );
+      }
     } catch (error) {
       console.error("Error re-compressing individual file:", originalFile.name, error);
     }
@@ -158,26 +195,34 @@ export default function HomePage() {
   };
 
   const handleDownloadAll = async () => {
-    if (compressedFiles.length === 0) return;
-    setIsProcessing(true);
-    const zip = new JSZip();
-    compressedFiles.forEach(({ compressed, original }) => {
-      if (compressed) {
-        zip.file(
-          `compressed-${original.name.replace(/\.(jpeg|jpg|png|webp|gif)$/i, '')}.${compressed.type.split('/')[1] || 'jpeg'}`,
-          compressed,
-          { binary: true }
-        );
-      }
-    });
+    if (!zipBlob) return;
+    handleDownload(zipBlob, "autocompress-images.zip");
+  };
+
+  const handleDownloadSingle = async (idx) => {
+    const file = compressedFiles[idx];
+    if (!file.compressed) return;
+    
+    // For single download, we need to get a fresh compression
     try {
-      const content = await zip.generateAsync({ type: "blob" });
-      handleDownload(content, "autocompress-images.zip");
+      const formData = new FormData();
+      formData.append('image', file.original);
+      formData.append('quality', (file.individualQuality || quality).toString());
+
+      const response = await fetch('/api/compress', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Compression failed');
+      }
+
+      const compressedBlob = await response.blob();
+      const extension = compressedBlob.type.split('/')[1] || 'jpg';
+      handleDownload(compressedBlob, `compressed-${file.original.name.replace(/\.[^/.]+$/, "")}.${extension}`);
     } catch (error) {
-      console.error("Error generating zip:", error);
-      alert(t('zip_error'));
-    } finally {
-      setIsProcessing(false);
+      console.error("Error downloading single file:", error);
     }
   };
 
@@ -285,7 +330,7 @@ export default function HomePage() {
               handleFileChange={handleFileChange}
               handleQualityChange={handleQualityChange}
               handleIndividualQualityChange={handleIndividualQualityChange}
-              handleDownload={handleDownload}
+              handleDownload={handleDownloadSingle}
               handleDownloadAll={handleDownloadAll}
               getCompressionSaving={getCompressionSaving}
             />
