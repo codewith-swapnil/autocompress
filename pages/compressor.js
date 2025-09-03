@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslation } from 'react-i18next';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 export default function Compressor({
     t,
@@ -24,6 +24,8 @@ export default function Compressor({
     getCompressionSaving
 }) {
     const [isClient, setIsClient] = useState(false);
+    const [tempQuality, setTempQuality] = useState(Math.round(quality * 100));
+    const timeoutRef = useRef(null);
     const supportedImageTypes = [
         "image/jpeg",
         "image/jpg",
@@ -34,6 +36,33 @@ export default function Compressor({
 
     useEffect(() => {
         setIsClient(true);
+        setTempQuality(Math.round(quality * 100));
+    }, [quality]);
+
+    // Debounced quality change handler
+    const debouncedQualityChange = useCallback((newQuality) => {
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
+        
+        timeoutRef.current = setTimeout(() => {
+            handleQualityChange({ target: { value: newQuality } });
+        }, 500); // Wait 500ms after last change
+    }, [handleQualityChange]);
+
+    const handleSliderChange = (e) => {
+        const newQuality = e.target.value;
+        setTempQuality(newQuality); // Update UI immediately
+        debouncedQualityChange(newQuality); // Debounce the API call
+    };
+
+    // Clean up timeout on unmount
+    useEffect(() => {
+        return () => {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+        };
     }, []);
 
     // Prevent rendering on server
@@ -147,7 +176,7 @@ export default function Compressor({
                                         {t('global_compression_quality')}
                                     </label>
                                     <span className="font-bold text-indigo-700 bg-indigo-100 px-3 py-1 rounded-full text-sm">
-                                        {Math.round(quality * 100)}%
+                                        {tempQuality}%
                                     </span>
                                 </div>
                                 <input
@@ -155,8 +184,8 @@ export default function Compressor({
                                     type="range"
                                     min="10"
                                     max="90"
-                                    value={Math.round(quality * 100)}
-                                    onChange={handleQualityChange}
+                                    value={tempQuality}
+                                    onChange={handleSliderChange}
                                     className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer accent-indigo-600"
                                 />
                                 <div className="flex justify-between text-sm font-medium text-gray-700">

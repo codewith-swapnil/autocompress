@@ -78,7 +78,7 @@ const withPWA = require('next-pwa')({
 module.exports = withPWA({
   reactStrictMode: true,
   images: {
-    domains: ['your-cdn-domain.com', 'firebasestorage.googleapis.com'],
+    domains: ['https://autocompress.vercel.app/', 'firebasestorage.googleapis.com'],
     minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
