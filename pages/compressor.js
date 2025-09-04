@@ -2,6 +2,7 @@
 
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect, useCallback, useRef } from 'react';
+import Image from 'next/image';
 
 export default function Compressor({
     t,
@@ -44,7 +45,7 @@ export default function Compressor({
         if (timeoutRef.current) {
             clearTimeout(timeoutRef.current);
         }
-        
+
         timeoutRef.current = setTimeout(() => {
             handleQualityChange({ target: { value: newQuality } });
         }, 500); // Wait 500ms after last change
@@ -211,11 +212,12 @@ export default function Compressor({
                                     <div className="relative aspect-square bg-gray-50 flex items-center justify-center p-4">
                                         {compressed && !error ? (
                                             <>
-                                                <img
+                                                <Image
                                                     src={URL.createObjectURL(compressed)}
                                                     alt={`${t('image_alt')} ${original.name}`}
                                                     className="w-full h-full object-contain"
-                                                    loading="lazy"
+                                                    width={400}
+                                                    height={400}
                                                 />
                                                 <div className="absolute bottom-3 left-3 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">
                                                     {t('saved')} {getCompressionSaving(original.size, compressed.size)}%
