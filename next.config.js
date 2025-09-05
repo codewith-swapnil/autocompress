@@ -75,10 +75,11 @@ const withPWA = require('next-pwa')({
   ]
 });
 
-module.exports = withPWA({
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['https://autocompress.vercel.app/', 'firebasestorage.googleapis.com'],
+    domains: ['autocompress.vercel.app', 'firebasestorage.googleapis.com'], // Removed https:// prefix
     minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
@@ -88,12 +89,32 @@ module.exports = withPWA({
     return [
       {
         source: '/:path*.(png|jpg|jpeg|gif|ico|svg|webp)',
-        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }]
+        headers: [
+          { 
+            key: 'Cache-Control', 
+            value: 'public, max-age=31536000, immutable' 
+          }
+        ]
       },
       {
         source: '/_next/static/(.*)',
-        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }]
+        headers: [
+          { 
+            key: 'Cache-Control', 
+            value: 'public, max-age=31536000, immutable' 
+          }
+        ]
       }
     ]
-  }
-});
+  },
+  // Add this to handle webpack issues with certain packages
+  webpack: (config) => {
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+    };
+    return config;
+  },
+};
+
+module.exports = withPWA(nextConfig);
