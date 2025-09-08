@@ -65,15 +65,15 @@ export default function HomePage() {
   const compressImages = useCallback(
     async (inputFiles, currentQuality) => {
       setIsProcessing(true);
-      
+
       try {
         // First, get compressed versions for display
-        const displayPromises = inputFiles.map(file => 
+        const displayPromises = inputFiles.map(file =>
           getCompressedImageForDisplay(file, currentQuality)
         );
-        
+
         const displayBlobs = await Promise.all(displayPromises);
-        
+
         // Create compressed files data with display blobs
         const compressedFilesData = inputFiles.map((file, index) => ({
           original: file,
@@ -81,13 +81,13 @@ export default function HomePage() {
           id: file.name + file.lastModified,
           displayOnly: true // Flag to indicate this is for display only
         }));
-        
+
         setCompressedFiles(compressedFilesData);
-        
+
         // Then get the batch compression for download
         const formData = new FormData();
         formData.append('quality', currentQuality.toString());
-        
+
         // Add all files to FormData
         inputFiles.forEach(file => {
           formData.append('images', file);
@@ -166,7 +166,7 @@ export default function HomePage() {
   const handleIndividualQualityChange = async (idx, originalFile, newIndividualQuality) => {
     try {
       const compressedBlob = await getCompressedImageForDisplay(originalFile, newIndividualQuality);
-      
+
       if (compressedBlob) {
         setCompressedFiles((prev) =>
           prev.map((item, i) =>
@@ -200,9 +200,14 @@ export default function HomePage() {
   };
 
   const handleDownloadSingle = async (idx) => {
+    // Check if the file exists at the given index
+    if (!compressedFiles[idx] || !compressedFiles[idx].compressed) {
+      console.error('File not found at index', idx);
+      return;
+    }
+
     const file = compressedFiles[idx];
-    if (!file.compressed) return;
-    
+
     // For single download, we need to get a fresh compression
     try {
       const formData = new FormData();
