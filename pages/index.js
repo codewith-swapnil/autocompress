@@ -39,29 +39,6 @@ export default function HomePage() {
     }
   }, [files, compressedFiles, isProcessing]);
 
-  // Add a function to get a compressed image for display
-  const getCompressedImageForDisplay = async (file, quality) => {
-    try {
-      const formData = new FormData();
-      formData.append('image', file);
-      formData.append('quality', quality.toString());
-
-      const response = await fetch('/api/compress', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error('Compression failed');
-      }
-
-      return await response.blob();
-    } catch (error) {
-      console.error("Error getting image for display:", error);
-      return null;
-    }
-  };
-
   const compressImages = useCallback(
     async (inputFiles, currentQuality) => {
       setIsProcessing(true);
@@ -79,7 +56,6 @@ export default function HomePage() {
           original: file,
           compressed: displayBlobs[index],
           id: file.name + file.lastModified,
-          displayOnly: true // Flag to indicate this is for display only
         }));
 
         setCompressedFiles(compressedFilesData);
@@ -120,8 +96,31 @@ export default function HomePage() {
         setIsProcessing(false);
       }
     },
-    [] // No dependencies needed
+    []
   );
+
+  // Add a function to get a compressed image for display
+  const getCompressedImageForDisplay = async (file, quality) => {
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('quality', quality.toString());
+
+      const response = await fetch('/api/compress', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Compression failed');
+      }
+
+      return await response.blob();
+    } catch (error) {
+      console.error("Error getting image for display:", error);
+      return null;
+    }
+  };
 
   const handleClearFiles = () => {
     setFiles([]);
@@ -207,28 +206,10 @@ export default function HomePage() {
     }
 
     const file = compressedFiles[idx];
+    const extension = file.compressed.type.split('/')[1] || 'jpg';
 
-    // For single download, we need to get a fresh compression
-    try {
-      const formData = new FormData();
-      formData.append('image', file.original);
-      formData.append('quality', (file.individualQuality || quality).toString());
-
-      const response = await fetch('/api/compress', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error('Compression failed');
-      }
-
-      const compressedBlob = await response.blob();
-      const extension = compressedBlob.type.split('/')[1] || 'jpg';
-      handleDownload(compressedBlob, `compressed-${file.original.name.replace(/\.[^/.]+$/, "")}.${extension}`);
-    } catch (error) {
-      console.error("Error downloading single file:", error);
-    }
+    // Use the already compressed blob instead of hitting the API again
+    handleDownload(file.compressed, `compressed-${file.original.name.replace(/\.[^/.]+$/, "")}.${extension}`);
   };
 
   const getCompressionSaving = (originalSize, compressedSize) => {
